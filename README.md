@@ -4,7 +4,9 @@
 
 STEPS TO CREATE PROJECT
 => create git project
+
 => git clone git project
+
 => open git project in vscode (README.ms is shown)
 
 => npm init (initialising npm command)
