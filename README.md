@@ -19,7 +19,7 @@ STEPS TO CREATE PROJECT
 
 => npm i express --save (installing express package in our project)
 
-=> npm i nodemon --save-dev (only required during development so we used -dev)
+=> npm i nodemon --save-dev (only required during development so we used -dev which will show this package in dev-dependencies )
 
     Update "test" inside scripts and replace it with "dev" and value as "nodemon index.js" and add another as "start" and value as "node index.js"
 
