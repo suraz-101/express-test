@@ -9,11 +9,11 @@ STEPS TO CREATE PROJECT
 
 => npm init (initialising npm command)
 
-        version : (1.0.0) => version release => shows the relaease version of our project
+    version : (1.0.0) => version release => shows the relaease version of our project
 
-        - major release : minor release : patch/ fix note
+    - major release : minor release : patch/ fix note
 
-         entry point is always index.js which keeps the information of each and every part of the project works like Table of Content
+        entry point is always index.js which keeps the information of each and every part of the project works like Table of Content
 
 => npm i express --save (installing express package in our project)
 
