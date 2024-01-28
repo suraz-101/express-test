@@ -23,6 +23,8 @@ STEPS TO CREATE PROJECT
 
     Update "test" inside scripts and replace it with "dev" and value as "nodemon index.js" and add another as "start" and value as "node index.js"
 
-    Now, if I need to run project using nodemon then i can run => npm run dev ( nodemon index.js starts )
+    Now, if we need to run project using nodemon then we can run => npm run dev ( nodemon index.js starts )
+
+    if i run "npm run dev" then project run automatically after save but if we run "npm run start" then we need to run command everytime after some changes on the project
 
 => create .gitignore file and include node_modules and save it to ignore node_modules folder
