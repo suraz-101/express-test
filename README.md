@@ -30,3 +30,15 @@ STEPS TO CREATE PROJECT
 => create .gitignore file and include node_modules and save it to ignore node_modules folder
 
 # Day - 25 : Express Hello World and Route Building
+
+METHODS
+
+    GET => Fetch data from server to client
+
+    POST => Create new data (client to server)
+
+    PUT => Update more than one data of existing data (client to server)
+
+    PATCH => Just update single data fo existing one (client to server)
+
+    DELETE => Remove existing data from server (client to server)
