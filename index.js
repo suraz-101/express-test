@@ -67,12 +67,12 @@ app.post("/", (req, res) => {
 
 // using HTTP put method
 app.put("/:id", (req, res) => {
-  console.log(req);
+  // console.log(req);
   const { id } = req.params;
 
   // const d = req.body;
   // const data = req.headers;
-  // console.log(data);
+  console.log(id);
   // Read data from database and update the data of the specific id
   res.status(200).json({ message: `The data to be updated are ${id}` });
 });
