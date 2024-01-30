@@ -37,12 +37,14 @@ app.get("/", (req, res) => {
 });
 
 app.get("/:id", (req, res) => {
+  console.log(req);
   const { id } = req.params;
   console.log("The id is :" + id);
+
   const data = users.filter((object) => {
     return object.id == id;
   });
-  console.log(data);
+
   res.json({
     message: ` the data of the user with id ${id} are ${JSON.stringify(data)}}`,
   });
