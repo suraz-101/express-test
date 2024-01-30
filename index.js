@@ -1,4 +1,5 @@
 const express = require("express");
+const { json } = require("express/lib/response");
 const app = express();
 // require("dotenv").config();
 const PORT = 8000;
@@ -15,8 +16,11 @@ app.get("/", (req, res) => {
 //using Http post method
 app.post("/", (req, res) => {
   //send data to database
-
-  res.status(200).json({ message: "Hello post World!" });
+  const data = req.body;
+  console.log(data);
+  res.status(200).json({
+    message: `blog add with data ${JSON.stringify(data)} `,
+  });
 });
 
 // using HTTP put method
@@ -31,8 +35,12 @@ app.put("/:id", (req, res) => {
 
 //using HTTP delete method
 app.delete("/:id", (req, res) => {
+  const { id } = req.params;
+
   // delete
-  res.status(200).json({ message: "Hello delete World!" });
+  res
+    .status(200)
+    .json({ message: `Data with id ${id} has been deleted from the database` });
 });
 
 //using HTTP patch method

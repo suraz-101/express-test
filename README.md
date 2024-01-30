@@ -48,3 +48,21 @@ METHODS
 # Day -26 : Routing and URL building
 
 - URL building using methods and URI
+
+- Data Sending Mechanism (FrontEnd to BackEnd)
+
+  => Params
+  => body
+  => headers
+  => querry
+
+- To use body as request we need to include following code in our index.js file
+
+        => app.use(express.json);
+
+- we can use above mentioned mecahnism to view data sent from request from frontend to backend
+
+        => req.params;
+        => req.body;
+        => req.headers;
+        => req.querry
