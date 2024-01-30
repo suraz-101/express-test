@@ -51,7 +51,7 @@ METHODS
 
 - Data Sending Mechanism (FrontEnd to BackEnd)
 
-  => Params
+  => Params ===> /:id
   => body
   => headers
   => querry
