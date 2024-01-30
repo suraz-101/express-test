@@ -42,3 +42,5 @@ METHODS
     PATCH => Just update single data fo existing one (client to server)
 
     DELETE => Remove existing data from server (client to server)
+
+# Day -26 : Routing and URI building
