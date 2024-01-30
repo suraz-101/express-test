@@ -8,7 +8,7 @@ const PORT = 8000;
 
 app.use(express.json());
 
-const users = [
+let users = [
   {
     id: 1,
     name: "suraj",
@@ -53,11 +53,18 @@ app.get("/:id", (req, res) => {
 //using Http post method
 app.post("/", (req, res) => {
   //send data to database
+  // const paramsData = req.query;
+  // console.log(paramsData);
   const data = req.body;
+
   console.log(data);
-  res.status(200).json({
-    message: `blog add with data ${JSON.stringify(data)} `,
-  });
+  users.push(data);
+  setTimeout(() => {
+    console.log(users);
+    res.status(200).json({
+      message: `blog add with data ${JSON.stringify(users)} `,
+    });
+  }, 2000);
 });
 
 // using HTTP put method
