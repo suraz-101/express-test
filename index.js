@@ -1,6 +1,7 @@
 const express = require("express");
-const { json } = require("express/lib/response");
+// const { json } = require("express/lib/response");
 const app = express();
+const fs = require("fs");
 // require("dotenv").config();
 const PORT = 8000;
 
@@ -33,7 +34,15 @@ let users = [
 
 //using Http get method
 app.get("/", (req, res) => {
-  res.status(200).json(users);
+  fs.readFile("./users.txt", "utf8", (error, data) => {
+    if (error) {
+      res.json({ message: error });
+    } else {
+      res.status(200).json({ data });
+      console.log(data);
+    }
+  });
+  // res.status(200).json(users);
 });
 
 app.get("/:id", (req, res) => {
@@ -52,19 +61,27 @@ app.get("/:id", (req, res) => {
 
 //using Http post method
 app.post("/", (req, res) => {
-  //send data to database
-  // const paramsData = req.query;
-  // console.log(paramsData);
+  // const data = req.query;
   const data = req.body;
-
   console.log(data);
-  users.push(data);
-  setTimeout(() => {
-    console.log(users);
-    res.status(200).json({
-      message: `blog add with data ${JSON.stringify(users)} `,
-    });
-  }, 2000);
+
+  fs.appendFile("./users.txt", JSON.stringify(data) + "\n", (error) => {
+    if (error) {
+      res.json({
+        message: error,
+      });
+    } else {
+      res.status(200).json({
+        message: `Data written successfully into the file!! `,
+      });
+    }
+  });
+  // setTimeout(() => {
+  //   console.log(users);
+  //   res.status(200).json({
+  //     message: `blog add with data ${JSON.stringify(users)} `,
+  //   });
+  // }, 2000);
 });
 
 // using HTTP put method
