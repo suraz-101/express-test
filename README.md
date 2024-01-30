@@ -43,4 +43,8 @@ METHODS
 
     DELETE => Remove existing data from server (client to server)
 
-# Day -26 : Routing and URI building
+    - Methods aer usefull to build URL .
+
+# Day -26 : Routing and URL building
+
+- URL building using methods and URI
