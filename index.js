@@ -8,9 +8,46 @@ const PORT = 8000;
 
 app.use(express.json());
 
+const users = [
+  {
+    id: 1,
+    name: "suraj",
+    email: "surajpandey101@gmail.com",
+  },
+  {
+    id: 2,
+    name: "sandesh",
+    email: "sandesh12@gmail.com",
+  },
+  {
+    id: 3,
+    name: "sandesh",
+    email: "sandygiri@gmail.com",
+  },
+  {
+    id: 4,
+    name: "nabin",
+    email: "nabin123@gmail.com",
+  },
+];
+
 //using Http get method
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Hello World!" });
+});
+
+app.get("/:id", (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const data = users.filter((object) => {
+    if (object.id == id) {
+      return object;
+    }
+  });
+  console.log(data);
+  res.json({
+    message: ` the data of the user with id ${id} are ${JSON.stringify(data)}}`,
+  });
 });
 
 //using Http post method
@@ -26,6 +63,7 @@ app.post("/", (req, res) => {
 // using HTTP put method
 app.put("/:id", (req, res) => {
   const { id } = req.params;
+
   const d = req.body;
   const data = req.headers;
   console.log(data);
