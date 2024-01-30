@@ -52,9 +52,9 @@ METHODS
 - Data Sending Mechanism (FrontEnd to BackEnd)
 
   => Params ===> /:id
+  => querry ===> ?id=1&name=suraj
   => body
   => headers
-  => querry
 
 - To use body as request we need to include following code in our index.js file
 

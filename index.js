@@ -33,16 +33,14 @@ let users = [
 
 //using Http get method
 app.get("/", (req, res) => {
-  res.status(200).json({ message: "Hello World!" });
+  res.status(200).json(users);
 });
 
 app.get("/:id", (req, res) => {
   const { id } = req.params;
-  console.log(id);
+  console.log("The id is :" + id);
   const data = users.filter((object) => {
-    if (object.id == id) {
-      return object;
-    }
+    return object.id == id;
   });
   console.log(data);
   res.json({
@@ -69,11 +67,12 @@ app.post("/", (req, res) => {
 
 // using HTTP put method
 app.put("/:id", (req, res) => {
+  console.log(req);
   const { id } = req.params;
 
-  const d = req.body;
-  const data = req.headers;
-  console.log(data);
+  // const d = req.body;
+  // const data = req.headers;
+  // console.log(data);
   // Read data from database and update the data of the specific id
   res.status(200).json({ message: `The data to be updated are ${id}` });
 });
@@ -93,6 +92,7 @@ app.patch("/:id", (req, res) => {
   res.status(200).json({ message: "Hello patch World!" });
 });
 
+// server listening port main gateway to the server through which request and response are propagate to an fromt the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
