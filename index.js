@@ -1,13 +1,11 @@
 const express = require("express");
 // const { json } = require("express/lib/response");
 const app = express();
-const fs = require("fs");
 const indexRouter = require("./routes/index");
 // require("dotenv").config();
 const PORT = 8000;
 
 //to use body we need to add following code
-
 app.use(express.json());
 
 app.use("/", indexRouter);
