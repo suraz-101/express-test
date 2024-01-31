@@ -2,10 +2,14 @@
 const router = require("express").Router();
 const blogRouter = require("../modules/blogs/blog.route");
 const tagRouter = require("../modules/tags/tag.route");
+const userRouter = require("../modules/users/user.route");
+const roleRouter = require("../modules/roles/role.route");
 //using Http get method
 
 router.use("/blogs", blogRouter);
 router.use("/tags", tagRouter);
+router.use("/users", userRouter);
+router.use("/roles", roleRouter);
 
 // router.get("/", (req, res) => {
 //   fs.readFile("../users.txt", "utf8", (error, data) => {
