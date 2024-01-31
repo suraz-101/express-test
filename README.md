@@ -29,6 +29,8 @@ STEPS TO CREATE PROJECT
 
 => create .gitignore file and include node_modules and save it to ignore node_modules folder
 
+=> npm i dotenv --save
+
 # Day - 25 : Express Hello World and Route Building
 
 METHODS
@@ -45,15 +47,15 @@ METHODS
 
     - Methods aer usefull to build URL .
 
-# Day -26 : Routing and URL building
+# Day - 26 : Routing and URL building
 
 - URL building using methods and URI
 
 - Data Sending Mechanism (FrontEnd to BackEnd)
 
-  => Params ===> /:id
-  => querry ===> ?id=1&name=suraj
-  => body
+  => Params ===> localhost/:id
+  => querry ===> localhost/?id=1&name=suraj
+  => body ===> {"propertyName1" = "Value1", "propertyName2" = "Vlaue2"}
   => headers
 
 - To use body as request we need to include following code in our index.js file
@@ -66,3 +68,18 @@ METHODS
         => req.body;
         => req.headers;
         => req.querry
+
+# Day - 27 : Routing and URL nuilding
+
+- Learned about folder structure
+
+        => Index.js - entry point
+        => Env - holds the secret keys
+        => public - holds the public assets like css,js,images
+        => Routes - holds the routing detail
+        => Services - hold the third party services call like nodemailer
+        => Utils - holds the simple js function like text parser, number parser
+        => Views (optional) - holds the UI part
+        => Documentation - holds the API documentation
+        => **tests** - holds the unit test cases performed on API/controllers
+        => Modules - holds all the core business logic like model, controller etc.

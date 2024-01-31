@@ -3,3 +3,4 @@
 {"id":3,"name":"Sandesh Giri","email":"girisandy12@gmail.com"}
 {"id":"4","name":"Nabin Chhetri","email":"nabinchhetri12@gmail.com"}
 {"id":5,"name":"Kishor Thapa","email":"thapakishor12@gmail.com"}
+{"id":6,"name":"Tej Bahadur Thapa","email":"magartej999@gmail.com"}
