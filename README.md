@@ -84,4 +84,16 @@ METHODS
         => __tests__ --> holds the unit test cases performed on API/controllers
         => Modules --> holds all the core business logic like model, controller etc.
 
-# Day - 28 : Error handling and static files
+# Day - 28 : Error handling and static files and Middlewares
+
+     =>   try{
+
+        }catch(err){
+
+        }
+
+    => throgw new Error();
+
+    Express, by defaukt does not allow us to server static files so we need to enable it using built-in middleware
+
+    app.use(express.static('public))
