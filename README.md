@@ -94,6 +94,20 @@ METHODS
 
     => throgw new Error();
 
+    => try{
+
+            Code block to run
+
+        }catch(err){
+
+            Code block to handle errors
+
+        }finally{
+
+            Code block to be executed regardless of the try result
+
+        }
+
     Express, by defaukt does not allow us to server static files so we need to enable it using built-in middleware
 
     app.use(express.static('public))
