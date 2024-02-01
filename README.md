@@ -73,13 +73,15 @@ METHODS
 
 - Learned about folder structure
 
-        => Index.js - entry point
-        => Env - holds the secret keys
-        => public - holds the public assets like css,js,images
-        => Routes - holds the routing detail
-        => Services - hold the third party services call like nodemailer
-        => Utils - holds the simple js function like text parser, number parser
-        => Views (optional) - holds the UI part
-        => Documentation - holds the API documentation
-        => **tests** - holds the unit test cases performed on API/controllers
-        => Modules - holds all the core business logic like model, controller etc.
+        => Index.js --> entry point
+        => Env --> holds the secret keys
+        => public --> holds the public assets like css,js,images
+        => Routes --> holds the routing detail
+        => Services --> hold the third party services call like nodemailer
+        => Utils --> holds the simple js function like text parser, number parser
+        => Views (optional) --> holds the UI part
+        => Documentation --> holds the API documentation
+        => __tests__ --> holds the unit test cases performed on API/controllers
+        => Modules --> holds all the core business logic like model, controller etc.
+
+# Day - 28 : Error handling and static files

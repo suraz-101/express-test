@@ -21,7 +21,6 @@ router.patch("/:id", (req, res) => {
 
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
-
   res.json({ message: `We are inside delete folder and the id is ${id}` });
 });
 // router.get("/", (req, res) => {
