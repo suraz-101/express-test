@@ -4,7 +4,6 @@ const blogRouter = require("../modules/blogs/blog.route"); // importing apis of 
 const tagRouter = require("../modules/tags/tag.route");
 const userRouter = require("../modules/users/user.route");
 const roleRouter = require("../modules/roles/role.route");
-
 const apiVersion = "/api/v1";
 
 //using Http get method

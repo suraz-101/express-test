@@ -5,13 +5,13 @@ const checkRole = (req, res, next) => {
   role != "admin" ? res.json({ message: "You are not allowed!!" }) : next();
 };
 router.get("/", checkRole, (req, res) => {
+  console.log(req.body);
   res.json({ mess: "we are inside get method of blog router" });
 });
 
 router.post("/", checkRole, (req, res, next) => {
   try {
     console.log(req.body);
-
     const { title } = req.body;
     const data = req.body;
     if (!title) throw new Error("Title is miising ");
@@ -25,6 +25,8 @@ router.post("/", checkRole, (req, res, next) => {
 
 router.put("/:id", checkRole, (req, res, next) => {
   try {
+    console.log(req.body);
+    console.log(req.body);
     const { id } = req.params;
     // const { title } = req.body;
     // if (!title) throw new Error("Title is miising ");
