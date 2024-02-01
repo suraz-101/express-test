@@ -1,14 +1,12 @@
 const router = require("express").Router();
-
-router.get("/", (req, res) => {
-  res.json({ mess: "we are inside get method of blog router" });
-});
-
 const checkRole = (req, res, next) => {
   const role = req.headers.role;
 
   role != "admin" ? res.json({ message: "You are not allowed!!" }) : next();
 };
+router.get("/", (req, res) => {
+  res.json({ mess: "we are inside get method of blog router" });
+});
 
 router.post("/", checkRole, (req, res, next) => {
   try {
@@ -27,6 +25,7 @@ router.post("/", checkRole, (req, res, next) => {
 
 router.put("/:id", (req, res, next) => {
   try {
+    const { id } = req.params;
     // const { title } = req.body;
     // if (!title) throw new Error("Title is miising ");
     res.json({ message: `We are inside put request and the id is ${id}` });
@@ -44,9 +43,13 @@ router.patch("/:id", (req, res, next) => {
   }
 });
 
-router.delete("/:id", (req, res) => {
-  const { id } = req.params;
-  res.json({ message: `We are inside delete folder and the id is ${id}` });
+router.delete("/:id", (req, res, next) => {
+  try {
+    const { id } = req.params;
+    res.json({ message: `We are inside delete folder and the id is ${id}` });
+  } catch (error) {
+    next();
+  }
 });
 
 module.exports = router;
