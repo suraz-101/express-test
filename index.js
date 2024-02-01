@@ -9,12 +9,13 @@ const PORT = 8000;
 app.use(express.json());
 app.use("/", express.static("public"));
 
+app.use("/", indexRouter);
 // app.use((req, res, next) => {
 //   req.body.published = "yes";
 //   next();
 // });
 
-app.use("/", indexRouter);
+// app.use("/", indexRouter);
 
 app.use((err, req, res, next) => {
   err = err ? err.toString() : "something went wrong";
