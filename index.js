@@ -2,6 +2,7 @@ require("dotenv").config(); // configuring dotenv file
 const express = require("express");
 const app = express();
 const route = require("./routes/index");
+const PORT = Number(process.env.PORT);
 
 app.use(express.json());
 app.use("/", express.static("public"));
@@ -14,6 +15,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: err });
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on http://localhost:${process.env.PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

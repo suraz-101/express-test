@@ -111,3 +111,9 @@ METHODS
     Express, by defaukt does not allow us to server static files so we need to enable it using built-in middleware
 
     app.use(express.static('public))
+
+# Day - 29 : Express Practice
+
+# Day - 30 : Express Database Handling
+
+# Day - 31 : Database Operations
