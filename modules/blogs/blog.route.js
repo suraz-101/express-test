@@ -5,7 +5,7 @@ const checkRole = (req, res, next) => {
   role != "admin" ? res.json({ message: "You are not allowed!!" }) : next();
 };
 
-router.get("/", checkRole, (req, res, next) => {
+router.get("/", (req, res, next) => {
   try {
     console.log(req.body);
     res.json({ mess: "we are inside get method of blog router" });
