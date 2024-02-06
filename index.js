@@ -8,7 +8,9 @@ const route = require("./routes/index");
 
 const app = express();
 
-mongoose.connect("");
+mongoose.connect(process.env.CONNECTION).then(() => {
+  console.log("database connected");
+});
 
 app.use(morgan("dev")); // checking log
 app.use(express.json());
