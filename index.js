@@ -1,11 +1,14 @@
 require("dotenv").config(); // configuring dotenv file
 const express = require("express");
-const route = require("./routes/index");
-const PORT = Number(process.env.PORT);
 const middleware = require("./middleware");
 const morgan = require("morgan"); //logger
+const mongoose = require("mongoose");
+const PORT = Number(process.env.PORT);
+const route = require("./routes/index");
 
 const app = express();
+
+mongoose.connect("");
 
 app.use(morgan("dev")); // checking log
 app.use(express.json());
