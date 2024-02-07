@@ -13,8 +13,8 @@ mongoose.connect(process.env.CONNECTION).then(() => {
 });
 
 app.use(morgan("dev")); // checking log
-app.use(express.json());
-app.use("/", express.static("public"));
+app.use(express.json()); // for req.body
+app.use("/", express.static("public")); //access images
 // app.use(morgan("dev"));
 
 // app.use(middleware.applicationLevelMiddleware); // implementation of middleware

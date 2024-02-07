@@ -1,16 +1,20 @@
 const router = require("express").Router();
+const roleController = require("./role.controller");
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    res.json({ message: `We are inside get method of role` });
+    const result = await roleController.getAllRole();
+    res.json({ roles: result });
   } catch (error) {
     next(error);
   }
 });
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   try {
-    res.json({ message: `We are inside post method of role` });
+    const roleData = await req.body;
+    const result = await roleController.createRole(roleData);
+    res.json({ roles: result });
   } catch (error) {
     next(error);
   }

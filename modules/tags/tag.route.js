@@ -1,6 +1,7 @@
 // const { Router  = require('express');
 
 const router = require("express").Router();
+const tagController = require("./tag.controller");
 
 router.get("/", (req, res) => {
   res.json({ mess: "we are inside tags router" });
