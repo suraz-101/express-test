@@ -17,7 +17,7 @@ app.use(express.json());
 app.use("/", express.static("public"));
 // app.use(morgan("dev"));
 
-app.use(middleware.applicationLevelMiddleware); // implementation of middleware
+// app.use(middleware.applicationLevelMiddleware); // implementation of middleware
 app.use("/", route);
 
 app.use((err, req, res, next) => {

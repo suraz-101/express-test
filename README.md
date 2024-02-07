@@ -114,8 +114,18 @@ METHODS
 
 # Day - 29 : Express Practice
 
+- Questions Practicing
+
 # Day - 30 : Express Database Handling
 
 # Day - 31 : Database Operations
 
-# Day - 32 : callback, callbackhell, promises, async await
+# Day - 32 : callback, callbackhell, promises, async await and mongodb connection
+
+# Day - 33 : CRUD Operation
+
+    - using mongoose npm package
+    - import mongoose
+    - get schema
+    - write down properties from object (Schema)
+    - create model from schema

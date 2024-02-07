@@ -1,41 +1,47 @@
 const router = require("express").Router();
+const blogController = require("./blog.controler");
 const checkRole = (req, res, next) => {
   const role = req.headers.role;
 
   role != "admin" ? res.json({ message: "You are not allowed!!" }) : next();
 };
 
-router.get("/", (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
-    console.log(req.body);
-    res.json({ mess: "we are inside get method of blog router" });
+    const result = await blogController.getAll();
+    res.json({ data: result });
   } catch (error) {
     next(error);
   }
 });
 
-router.post("/", checkRole, (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   try {
-    console.log(req.body);
-    const { title } = req.body;
+    const { id } = req.params;
+    const result = await blogController.getById(id);
+    res.json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/", checkRole, async (req, res, next) => {
+  try {
     const data = req.body;
-    if (!title) throw new Error("Title is miising ");
-    res.json({
-      mes: `We are inside blog post methods ${JSON.stringify(data)}`,
-    });
+    const result = await blogController.create(data);
+    res.json({ data: result });
   } catch (err) {
     next(err);
   }
 });
 
-router.put("/:id", checkRole, (req, res, next) => {
+router.put("/:id", checkRole, async (req, res, next) => {
   try {
-    console.log(req.body);
-    console.log(req.body);
     const { id } = req.params;
-    // const { title } = req.body;
-    // if (!title) throw new Error("Title is miising ");
-    res.json({ message: `We are inside put request and the id is ${id}` });
+    const data = req.body;
+    console.log(data);
+    const result = await blogController.updateById(id, data);
+    res.json({ message: result });
   } catch (err) {
     next(err);
   }
@@ -50,10 +56,12 @@ router.patch("/:id", (req, res, next) => {
   }
 });
 
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    res.json({ message: `We are inside delete folder and the id is ${id}` });
+    // console.log(id);
+    const result = await blogController.deleteById(id);
+    res.json({ message: result });
   } catch (error) {
     next();
   }
