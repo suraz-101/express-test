@@ -1,6 +1,6 @@
-const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
 
-const blogSchema = new Schema({
+const blogSchema = new mongoose.Schema({
   title: { type: String, required: [true, "Tile is missing"] },
   tags: { type: String }, //["Science", "mern-stack"] ??
   content: { type: String },
@@ -11,7 +11,7 @@ const blogSchema = new Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
-const BlogModel = new model("Blog", blogSchema);
+const BlogModel = new mongoose.model("Blog", blogSchema);
 
 module.exports = BlogModel;
 
