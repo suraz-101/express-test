@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const blogController = require("./blog.controler");
+const { validate } = require("./blog.validator");
+
 const checkRole = (req, res, next) => {
   const role = req.headers.role;
 
@@ -25,7 +27,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.post("/", checkRole, async (req, res, next) => {
+router.post("/", validate, async (req, res, next) => {
   try {
     const data = req.body;
     const result = await blogController.create(data);
@@ -35,7 +37,7 @@ router.post("/", checkRole, async (req, res, next) => {
   }
 });
 
-router.put("/:id", checkRole, async (req, res, next) => {
+router.put("/:id", validate, async (req, res, next) => {
   try {
     const { id } = req.params;
     const data = req.body;
@@ -47,7 +49,7 @@ router.put("/:id", checkRole, async (req, res, next) => {
   }
 });
 
-router.patch("/:id", (req, res, next) => {
+router.patch("/:id", validate, (req, res, next) => {
   try {
     const { id } = req.params;
     res.json({ message: `We are inside patch request and the id is ${id}` });

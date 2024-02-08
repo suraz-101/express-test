@@ -116,6 +116,8 @@ METHODS
 
 - Questions Practicing
 
+# BASIC DATABASE WEEK
+
 # Day - 30 : Express Database Handling
 
 # Day - 31 : Database Operations
@@ -129,3 +131,9 @@ METHODS
     - get schema
     - write down properties from object (Schema)
     - create model from schema
+
+# Day - 34 : Data Validations and References
+
+    - Validations
+
+        -install Joi npm
