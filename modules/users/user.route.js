@@ -1,12 +1,13 @@
 const router = require("express").Router();
 const userController = require("./user.controller");
+const { validate } = require("./user.validate");
 
 router.get("/", async (req, res) => {
   const result = await userController.getAllUsers();
   res.json({ data: result });
 });
 
-router.post("/", async (req, res) => {
+router.post("/", validate, async (req, res) => {
   const userData = req.body;
   // console.log(userData);
 

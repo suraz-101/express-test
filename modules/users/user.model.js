@@ -2,7 +2,11 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: [true, "Name is mandatory"] },
-  email: { type: String, required: [true, "Please provide the email"] },
+  email: {
+    type: String,
+    required: [true, "Please provide the email"],
+    unique: true,
+  },
   phoneNumber: {
     type: Number,
     required: [true, "Please provide contact details"],

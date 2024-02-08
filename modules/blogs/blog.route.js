@@ -61,7 +61,6 @@ router.patch("/:id", validate, (req, res, next) => {
 router.delete("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    // console.log(id);
     const result = await blogController.deleteById(id);
     res.json({ message: result });
   } catch (error) {
