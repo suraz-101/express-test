@@ -23,7 +23,6 @@ app.use("/", route);
 app.use((err, req, res, next) => {
   err = err ? err.toString() : "something went wrong";
   res.status(500).json({ message: err });
-  // next();
 });
 
 app.listen(PORT, () => {

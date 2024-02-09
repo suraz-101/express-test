@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const userController = require("./user.controller");
 const { validate } = require("./user.validate");
+const nodemailer = require("nodemailer");
 
 router.get("/", async (req, res) => {
   const result = await userController.getAllUsers();
@@ -33,4 +34,15 @@ router.patch("/:id", (req, res) => {
   const { id } = req.params;
   res.json({ message: `We are inside patch method of user` });
 });
+
+router.post("/register", async (req, res, next) => {
+  try {
+    const result = await userController.registerUser(req.body);
+    res.status(200).json({ message: result });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/login", async (req, res, next) => {});
 module.exports = router;

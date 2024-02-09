@@ -7,6 +7,7 @@ const Schema = Joi.object({
     tlds: { allow: ["com", "net"] },
   }),
   phoneNumber: Joi.number().required(),
+  password: Joi.string().required(),
 });
 
 const validate = (req, res, next) => {
