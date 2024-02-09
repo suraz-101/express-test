@@ -5,4 +5,7 @@ const encryption = (password) => {
   return bcrypt.hashSync(password, process.env.Salt);
 };
 
-module.exports = { encryption };
+const decryption = (password, hashedPassword) => {
+  return bcrypt.compareSync(password, hashedPassword);
+};
+module.exports = { encryption, decryption };

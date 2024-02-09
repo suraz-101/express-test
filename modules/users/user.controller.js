@@ -1,5 +1,5 @@
 const userSchema = require("./user.model");
-const { encryption } = require("../../utils/bcrypt");
+const { encryption, decryption } = require("../../utils/bcrypt");
 const { mailler } = require("../../services/nodemailer");
 
 const createUser = (payload) => {
@@ -29,7 +29,7 @@ const registerUser = async (payload) => {
   payload.password = hashPass;
 
   // store payload into the database
-  const registeredUsers = userSchema.create(payload);
+  const registeredUsers = await userSchema.create(payload);
 
   // send mail if successfull
   if (!registeredUsers) throw new Error("Registration Failed");
@@ -40,10 +40,17 @@ const registerUser = async (payload) => {
   return "Registration successfull";
 };
 
-const loginUser=(payload)=>{
-  
-
-}
+const loginUser = async (payload) => {
+  const { email, password } = payload;
+  if (!email || !password)
+    throw new Error("Please enter username and password");
+  const result = await userSchema.findOne({ email });
+  if (!result) throw new Error("Email is invalid");
+  const { password: hash } = result;
+  const comparePassword = decryption(password, hash);
+  if (!comparePassword) throw new Error("Password does not matched");
+  return "You are successfully loggedin";
+};
 
 module.exports = {
   createUser,
@@ -52,4 +59,5 @@ module.exports = {
   updateUsersDetails,
   deleteUser,
   registerUser,
+  loginUser,
 };
