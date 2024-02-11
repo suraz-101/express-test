@@ -7,10 +7,20 @@ const userSchema = new mongoose.Schema({
     required: [true, "Please provide the email"],
     unique: true,
   },
-  password: { type: Number, required: [true, "password is required"] },
+  password: {
+    type: String,
+    required: [true, "password is required"],
+    select: false, //exclude password
+  },
   phoneNumber: {
     type: Number,
     required: [true, "Please provide contact details"],
+  },
+  role: {
+    type: [String],
+    enum: ["admin", "user"],
+    default: "user",
+    required: true,
   },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },

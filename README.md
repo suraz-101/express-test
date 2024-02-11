@@ -136,4 +136,31 @@ METHODS
 
     - Validations
 
-        -install Joi npm
+        -install Joi npm for validation
+
+# Day - 35 : Express Blog Managemenet System (User Login)
+
+    - User Registration
+    - User Login
+        -> Create login controller
+        -> create post route as /api/v1/users/login
+        -> in controller, get req.body (email and password)
+        -> check if user exists in the system or not
+        -> if user exist, get hanshed password from database
+        -> compare user provided password with hashed password
+        -> if result false, throw new Error ("Email or Password mismatched")
+        -> Additional work
+
+# Day - 36 : User Authorisation
+
+    - User Authorisation continue on User login
+        :
+        ->  System needs to send something back to user (access_token)
+        -> cookie, session, Json web token (JWT) => Three methods of authorisatin
+
+        ================JWT==================
+        - install npm package jsonwebtoken
+        - jsonwebtoken, 2 utility function (token generator/ token validate)
+        - create a toekn.js utility file
+        - if user successfully logsin, send the token to the user through login api
+        - send the token for every request in req.headers

@@ -1,7 +1,7 @@
 const userSchema = require("./user.model");
 const { encryption, decryption } = require("../../utils/bcrypt");
 const { mailler } = require("../../services/nodemailer");
-
+const { checkRole } = require("../../utils/sessionManager");
 const createUser = (payload) => {
   return userSchema.create(payload);
 };
@@ -42,13 +42,19 @@ const registerUser = async (payload) => {
 
 const loginUser = async (payload) => {
   const { email, password } = payload;
+
   if (!email || !password)
     throw new Error("Please enter username and password");
-  const result = await userSchema.findOne({ email });
-  if (!result) throw new Error("Email is invalid");
-  const { password: hash } = result;
+  const user = await userSchema.findOne({ email }).select("+ password");
+  console.log(user);
+  if (!user) throw new Error("Email is invalid");
+  const { password: hash } = user;
+
   const comparePassword = decryption(password, hash);
   if (!comparePassword) throw new Error("Password does not matched");
+
+  const userPayload = { name: user.name, email: user.email, roles: user.roles };
+  console.log(userPayload);
   return "You are successfully loggedin";
 };
 
