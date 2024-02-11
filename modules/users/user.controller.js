@@ -2,6 +2,8 @@ const userSchema = require("./user.model");
 const { encryption, decryption } = require("../../utils/bcrypt");
 const { mailler } = require("../../services/nodemailer");
 const { checkRole } = require("../../utils/sessionManager");
+const { signJWT, verifyJWT } = require("../../utils/token");
+
 const createUser = (payload) => {
   return userSchema.create(payload);
 };
@@ -45,17 +47,21 @@ const loginUser = async (payload) => {
 
   if (!email || !password)
     throw new Error("Please enter username and password");
-  const user = await userSchema.findOne({ email }).select("+ password");
-  console.log(user);
+  const user = await userSchema.findOne({ email }).select("+password");
   if (!user) throw new Error("Email is invalid");
   const { password: hash } = user;
 
   const comparePassword = decryption(password, hash);
   if (!comparePassword) throw new Error("Password does not matched");
+  //return access tokemn
+  const userPayload = {
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  };
 
-  const userPayload = { name: user.name, email: user.email, roles: user.roles };
-  console.log(userPayload);
-  return "You are successfully loggedin";
+  const token = await signJWT(userPayload);
+  return token;
 };
 
 module.exports = {
