@@ -44,14 +44,16 @@ const registerUser = async (payload) => {
 
 const loginUser = async (payload) => {
   const { email, password } = payload;
-
+  //check whether payload contains email and password or not if empty throw error else seach detail of users using the email
   if (!email || !password)
     throw new Error("Please enter username and password");
   const user = await userSchema.findOne({ email }).select("+password");
+  // if user is found then extract the hashed password
   if (!user) throw new Error("Email is invalid");
   const { password: hash } = user;
-
+  // compare the password using bcryptjs package
   const comparePassword = decryption(password, hash);
+  // if comparePassword is false then throw error else move to next steps where you need to create a json body to send specific user's data to client
   if (!comparePassword) throw new Error("Password does not matched");
   //return access tokemn
   const userPayload = {

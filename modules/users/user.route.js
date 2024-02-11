@@ -2,8 +2,9 @@ const router = require("express").Router();
 const userController = require("./user.controller");
 const { validate } = require("./user.validate");
 const nodemailer = require("nodemailer");
+const { checkRole } = require("../../utils/sessionManager");
 
-router.get("/", async (req, res) => {
+router.get("/", checkRole(["admin"]), async (req, res) => {
   const result = await userController.getAllUsers();
   res.json({ data: result });
 });

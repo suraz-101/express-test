@@ -158,9 +158,14 @@ METHODS
         ->  System needs to send something back to user (access_token)
         -> cookie, session, Json web token (JWT) => Three methods of authorisatin
 
-        ================JWT==================
-        - install npm package jsonwebtoken
+        ================instal JWT==================
+        - install npm package jsonwebtoken => npm i jsonwebtoken --save
         - jsonwebtoken, 2 utility function (token generator/ token validate)
         - create a toekn.js utility file
+        - Add secret and duration in env file
+        
         - if user successfully logsin, send the token to the user through login api
         - send the token for every request in req.headers
+        - checkRole middleware update using token validate utility function
+        - if false, permission denied error throw 
+        - if true, next()
