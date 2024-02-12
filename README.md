@@ -183,6 +183,6 @@ METHODS
         => compare the toke that user send and the database of the specific user from the databas
         => if otp doest not match then throw new error "invalid otp code"
         => else hash the password using bcryptjs
-        => then update the password filed into the database collection of specific user using updateOne and opt as empty
+        => then update the password field into the database collection of specific user using updateOne and opt as empty
         => if update is failed then throw new error "password update failed"
         => else return "password is successfully changed, CONGRATULATIONS!!"
