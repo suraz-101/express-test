@@ -163,9 +163,11 @@ METHODS
         - jsonwebtoken, 2 utility function (token generator/ token validate)
         - create a toekn.js utility file
         - Add secret and duration in env file
-        
+
         - if user successfully logsin, send the token to the user through login api
         - send the token for every request in req.headers
         - checkRole middleware update using token validate utility function
-        - if false, permission denied error throw 
+        - if false, permission denied error throw
         - if true, next()
+
+# Day - 37 : User Password Actions

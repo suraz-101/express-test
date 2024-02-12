@@ -2,11 +2,7 @@ const router = require("express").Router();
 const blogController = require("./blog.controler");
 const { validate } = require("./blog.validator");
 
-const checkRole = (req, res, next) => {
-  const role = req.headers.role;
-
-  role != "admin" ? res.json({ message: "You are not allowed!!" }) : next();
-};
+const { checkRole } = require("../../utils/sessionManager");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -27,7 +23,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.post("/", validate, async (req, res, next) => {
+router.post("/", validate, checkRole(["admin"]), async (req, res, next) => {
   try {
     const data = req.body;
     const result = await blogController.create(data);

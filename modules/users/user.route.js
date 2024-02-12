@@ -53,4 +53,22 @@ router.post("/login", async (req, res, next) => {
     next(error);
   }
 });
+
+router.post("/otpGeneration", async (req, res, next) => {
+  try {
+    const result = await userController.generateOTP(req.body);
+    res.status(200).json({ message: result });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/verifyOtp", async (req, res, next) => {
+  try {
+    const result = await userController.verifyOTP(req.body);
+    res.status(200).json({ message: result });
+  } catch (error) {
+    next(error);
+  }
+});
 module.exports = router;

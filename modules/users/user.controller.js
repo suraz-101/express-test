@@ -2,7 +2,8 @@ const userSchema = require("./user.model");
 const { encryption, decryption } = require("../../utils/bcrypt");
 const { mailler } = require("../../services/nodemailer");
 const { checkRole } = require("../../utils/sessionManager");
-const { signJWT, verifyJWT } = require("../../utils/token");
+const { signJWT, otpCode } = require("../../utils/token");
+const userModel = require("./user.model");
 
 const createUser = (payload) => {
   return userSchema.create(payload);
@@ -36,7 +37,11 @@ const registerUser = async (payload) => {
   // send mail if successfull
   if (!registeredUsers) throw new Error("Registration Failed");
   const { email } = payload;
-  const message = mailler(email);
+  const message = mailler(
+    email,
+    "Registration",
+    "You have successfully registered into the system. CONGRATULATIONS!!"
+  );
   // else throw new Error("registration failed");
   if (!message) throw new Error("Regsitration Failed");
   return "Registration successfull";
@@ -66,6 +71,32 @@ const loginUser = async (payload) => {
   return token;
 };
 
+const generateOTP = async (payload) => {
+  const { email } = payload;
+  if (!email) throw new Error("please enter email");
+  const user = await userSchema.findOne({ email });
+  if (!user) throw new Error("user does not exists");
+  const otp = await otpCode();
+  await userSchema.updateOne({ email }, { otp });
+  mailler(email, "  OTP", `Your otp code is : ${otp}`);
+  return "Email is sent ";
+};
+const verifyOTP = async (payload) => {
+  const { email, otp, password } = payload;
+  if (!email || !otp || !password)
+    throw new Error("something is missing, Please recheck");
+  const user = await userModel.findOne({ email });
+  const userOtp = user.otp;
+  if (otp !== userOtp) throw new Error("Invalid token");
+  const hashedPassword = await encryption(password);
+  const updatedUser = await userModel.updateOne(
+    { email },
+    { password: hashedPassword, otp: "" }
+  );
+  if (!updatedUser) throw new Error("Password update failed");
+  return "Password changed successfully";
+};
+
 module.exports = {
   createUser,
   getAllUsers,
@@ -74,4 +105,6 @@ module.exports = {
   deleteUser,
   registerUser,
   loginUser,
+  generateOTP,
+  verifyOTP,
 };

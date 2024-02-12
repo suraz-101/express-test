@@ -10,14 +10,14 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const mailler = async (email) => {
+const mailler = async (email, subject, body) => {
   // send mail with defined transport object
   const info = await transporter.sendMail({
     from: `"Blog Management System" ${process.env.USERNAME}`, // sender address
     to: email, // list of receivers
-    subject: "Registration", // Subject line
-    text: "Registration Completed", // plain text body
-    html: "<b>Registration Completed</b>", // html body
+    subject: subject, // Subject line
+    text: body, // plain text body
+    html: `<b>${body}</b>`, // html body
   });
 
   return info;
