@@ -171,3 +171,18 @@ METHODS
         - if true, next()
 
 # Day - 37 : User Password Actions
+
+    - whenuser click forgate password
+        => First, email need to be verified and if email exist in database
+        => Then, generate an OTP code using math.random
+        => store that otp in database collection
+        => send email with otp code to the specific email address
+
+        => In next step after user insert the otp code and new password into the file
+        => extract the specific user from the database using email and store in a variable
+        => compare the toke that user send and the database of the specific user from the databas
+        => if otp doest not match then throw new error "invalid otp code"
+        => else hash the password using bcryptjs
+        => then update the password filed into the database collection of specific user using updateOne and opt as empty
+        => if update is failed then throw new error "password update failed"
+        => else return "password is successfully changed, CONGRATULATIONS!!"
