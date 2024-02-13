@@ -49,18 +49,13 @@ const registerUser = async (payload) => {
 
 const loginUser = async (payload) => {
   const { email, password } = payload;
-  //check whether payload contains email and password or not if empty throw error else seach detail of users using the email
   if (!email || !password)
     throw new Error("Please enter username and password");
   const user = await userSchema.findOne({ email }).select("+password");
-  // if user is found then extract the hashed password
   if (!user) throw new Error("Email is invalid");
   const { password: hash } = user;
-  // compare the password using bcryptjs package
   const comparePassword = decryption(password, hash);
-  // if comparePassword is false then throw error else move to next steps where you need to create a json body to send specific user's data to client
   if (!comparePassword) throw new Error("Password does not matched");
-  //return access tokemn
   const userPayload = {
     name: user.name,
     email: user.email,
@@ -97,6 +92,47 @@ const verifyOTP = async (payload) => {
   return "Password changed successfully";
 };
 
+const resetPassword = async (payload) => {
+  const { userId, newPassword } = payload;
+  if (!userId || !newPassword) throw new Error("userId or password is missing");
+  const user = await userModel.findOne({ _id: userId }).select("+password");
+  if (!user) throw new Error("user does not found ");
+  await userModel.updateOne(
+    { _id: userId },
+    { password: encryption(newPassword) }
+  );
+  return "Passsword reset Successfully";
+};
+
+const changePassword = async (payload) => {
+  const { userId, oldPassword, newPassword } = payload;
+  if (!userId || !oldPassword || !newPassword)
+    throw new Error("Something is missing");
+  const user = await userModel.findOne({ _id: userId }).select("+password");
+  if (!user) throw new Error("User does not exist ");
+  const comparision = decryption(oldPassword, user.password);
+  if (!comparision) throw new Error("password doesnot match");
+
+  await userModel.updateOne(
+    { _id: user.id },
+    { password: encryption(newPassword) }
+  );
+
+  return "password changed successfully";
+};
+
+const getProfile = (userId) => {
+  return userModel.findOne({ _id: userId });
+};
+
+const updateProfile = async (userId, payload) => {
+  const user = await userModel.findOne({ _id: userId });
+
+  if (!user) throw new Error("User does not exists");
+  await userModel.updateOne({ _id: user.id }, payload);
+  return "user Updated Successfully";
+};
+
 module.exports = {
   createUser,
   getAllUsers,
@@ -107,4 +143,8 @@ module.exports = {
   loginUser,
   generateOTP,
   verifyOTP,
+  resetPassword,
+  changePassword,
+  getProfile,
+  updateProfile,
 };

@@ -186,3 +186,8 @@ METHODS
         => then update the password field into the database collection of specific user using updateOne and opt as empty
         => if update is failed then throw new error "password update failed"
         => else return "password is successfully changed, CONGRATULATIONS!!"
+
+# Day - 38 : User Password Manipulation
+
+- Reset Password
+- Change Password
