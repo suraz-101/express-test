@@ -4,6 +4,7 @@ const { validate } = require("./user.validate");
 const nodemailer = require("nodemailer");
 const { checkRole } = require("../../utils/sessionManager");
 
+// this is only accessible by admin only
 router.get("/", checkRole(["admin"]), async (req, res) => {
   const result = await userController.getAllUsers();
   res.json({ data: result });
@@ -51,6 +52,7 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
+// this api are used for forget password
 router.post("/otpGeneration", async (req, res, next) => {
   try {
     const result = await userController.generateOTP(req.body);
@@ -69,6 +71,7 @@ router.post("/verifyOtp", async (req, res, next) => {
   }
 });
 
+// this api used for reseting password by admin
 router.patch("/resetPassword", checkRole(["admin"]), async (req, res, next) => {
   try {
     const result = await userController.resetPassword(req.body);
@@ -78,6 +81,7 @@ router.patch("/resetPassword", checkRole(["admin"]), async (req, res, next) => {
   }
 });
 
+// this pau is used for get data of logged in user which is only accessible for specific users
 router.get("/get-user", checkRole(["user"]), async (req, res, next) => {
   try {
     const { id } = req.body;
@@ -89,6 +93,7 @@ router.get("/get-user", checkRole(["user"]), async (req, res, next) => {
   }
 });
 
+// this is the api accessible to only user role to change password
 router.patch("/changePassword", checkRole(["user"]), async (req, res, next) => {
   try {
     const result = await userController.changePassword(req.body);
@@ -98,6 +103,7 @@ router.patch("/changePassword", checkRole(["user"]), async (req, res, next) => {
   }
 });
 
+// this is the api to update the profile of specific user which is only accessible forspecific user
 router.put("/updateProfile", checkRole(["user"]), async (req, res, next) => {
   try {
     const { id, ...rest } = req.body;
@@ -109,4 +115,5 @@ router.put("/updateProfile", checkRole(["user"]), async (req, res, next) => {
     next(error);
   }
 });
+
 module.exports = router;

@@ -122,7 +122,7 @@ const changePassword = async (payload) => {
 };
 
 const getProfile = (userId) => {
-  return userModel.findOne({ _id: userId });
+  return userModel.findOne({ _id:userId });
 };
 
 const updateProfile = async (userId, payload) => {
