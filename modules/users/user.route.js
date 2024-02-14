@@ -11,7 +11,7 @@ const nodemailer = require("nodemailer");
 const { checkRole } = require("../../utils/sessionManager");
 
 // this is only accessible by admin only
-router.get("/", checkRole(["admin"]), async (req, res) => {
+router.get("/", checkRole(["user"]), async (req, res) => {
   const result = await userController.getAllUsers();
   res.json({ data: result });
 });
@@ -93,7 +93,7 @@ router.patch(
 );
 
 // this pau is used for get data of logged in user which is only accessible for specific users
-router.get("/get-user", checkRole(["admin"]), async (req, res, next) => {
+router.get("/get-user", checkRole(["user"]), async (req, res, next) => {
   try {
     const { id } = req.body;
     if (!id) throw new Error("id is required");
@@ -127,7 +127,6 @@ router.put(
   async (req, res, next) => {
     try {
       const { id, ...rest } = req.body;
-
       if (!id) throw new Error("Id is required");
       const result = await userController.updateProfile(id, rest);
       res.status(200).json({ message: result });

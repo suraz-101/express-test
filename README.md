@@ -189,5 +189,9 @@ METHODS
 
 # Day - 38 : User Password Manipulation
 
-- Reset Password
-- Change Password
+- Reset Password => only by admin
+- Change Password => only by user
+- update profile => only by user 
+
+
+3 Day - 39 : 
