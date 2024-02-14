@@ -1,10 +1,9 @@
 const router = require("express").Router();
 const blogController = require("./blog.controler");
 const { validate } = require("./blog.validator");
-
 const { checkRole } = require("../../utils/sessionManager");
 
-router.get("/", async (req, res, next) => {
+router.get("/", checkRole(["user", "admin"]), async (req, res, next) => {
   try {
     const result = await blogController.getAll();
     res.json({ data: result });
@@ -13,9 +12,9 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/:id", async (req, res, next) => {
+router.get("/getBlod", async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
     const result = await blogController.getById(id);
     res.json({ data: result });
   } catch (error) {
@@ -33,19 +32,18 @@ router.post("/", validate, checkRole(["admin"]), async (req, res, next) => {
   }
 });
 
-router.put("/:id", validate, async (req, res, next) => {
+router.put("/updateBlog", checkRole(["admin"]), async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const data = req.body;
-    console.log(data);
-    const result = await blogController.updateById(id, data);
+    const { id, ...rest } = req.body;
+    console.log(rest);
+    const result = await blogController.updateById(id, rest);
     res.json({ message: result });
   } catch (err) {
     next(err);
   }
 });
 
-router.patch("/:id", validate, (req, res, next) => {
+router.patch("/:id", checkRole(["admin"]), (req, res, next) => {
   try {
     const { id } = req.params;
     res.json({ message: `We are inside patch request and the id is ${id}` });
@@ -54,9 +52,9 @@ router.patch("/:id", validate, (req, res, next) => {
   }
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/deleteBlog", checkRole(["admin"]), async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
     const result = await blogController.deleteById(id);
     res.json({ message: result });
   } catch (error) {
