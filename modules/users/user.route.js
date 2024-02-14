@@ -1,6 +1,12 @@
 const router = require("express").Router();
 const userController = require("./user.controller");
-const { validate } = require("./user.validate");
+const {
+  validate,
+  resetValidate,
+  userUpdateVlaidation,
+  loginValidate,
+  changePasswordValidation,
+} = require("./user.validate");
 const nodemailer = require("nodemailer");
 const { checkRole } = require("../../utils/sessionManager");
 
@@ -34,7 +40,7 @@ router.delete("/:id", async (req, res) => {
 //   res.json({ message: `We are inside patch method of user` });
 // });
 
-router.post("/register", async (req, res, next) => {
+router.post("/register", validate, async (req, res, next) => {
   try {
     const result = await userController.registerUser(req.body);
     res.status(200).json({ message: result });
@@ -43,7 +49,7 @@ router.post("/register", async (req, res, next) => {
   }
 });
 
-router.post("/login", async (req, res, next) => {
+router.post("/login", loginValidate, async (req, res, next) => {
   try {
     const result = await userController.loginUser(req.body);
     res.status(200).json({ message: result });
@@ -72,17 +78,22 @@ router.post("/verifyOtp", async (req, res, next) => {
 });
 
 // this api used for reseting password by admin
-router.patch("/resetPassword", checkRole(["admin"]), async (req, res, next) => {
-  try {
-    const result = await userController.resetPassword(req.body);
-    res.status(200).json({ message: result });
-  } catch (error) {
-    next(error);
+router.patch(
+  "/resetPassword",
+  resetValidate,
+  checkRole(["admin"]),
+  async (req, res, next) => {
+    try {
+      const result = await userController.resetPassword(req.body);
+      res.status(200).json({ message: result });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 // this pau is used for get data of logged in user which is only accessible for specific users
-router.get("/get-user", checkRole(["user"]), async (req, res, next) => {
+router.get("/get-user", checkRole(["admin"]), async (req, res, next) => {
   try {
     const { id } = req.body;
     if (!id) throw new Error("id is required");
@@ -94,26 +105,36 @@ router.get("/get-user", checkRole(["user"]), async (req, res, next) => {
 });
 
 // this is the api accessible to only user role to change password
-router.patch("/changePassword", checkRole(["user"]), async (req, res, next) => {
-  try {
-    const result = await userController.changePassword(req.body);
-    res.status(200).json({ message: result });
-  } catch (error) {
-    next(error);
+router.patch(
+  "/changePassword",
+  changePasswordValidation,
+  checkRole(["user"]),
+  async (req, res, next) => {
+    try {
+      const result = await userController.changePassword(req.body);
+      res.status(200).json({ message: result });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 // this is the api to update the profile of specific user which is only accessible forspecific user
-router.put("/updateProfile", checkRole(["user"]), async (req, res, next) => {
-  try {
-    const { id, ...rest } = req.body;
+router.put(
+  "/updateProfile",
+  userUpdateVlaidation,
+  checkRole(["user"]),
+  async (req, res, next) => {
+    try {
+      const { id, ...rest } = req.body;
 
-    if (!id) throw new Error("Id is required");
-    const result = await userController.updateProfile(id, rest);
-    res.status(200).json({ message: result });
-  } catch (error) {
-    next(error);
+      if (!id) throw new Error("Id is required");
+      const result = await userController.updateProfile(id, rest);
+      res.status(200).json({ message: result });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 module.exports = router;

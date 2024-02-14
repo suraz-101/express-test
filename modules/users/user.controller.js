@@ -93,14 +93,11 @@ const verifyOTP = async (payload) => {
 };
 
 const resetPassword = async (payload) => {
-  const { userId, newPassword } = payload;
-  if (!userId || !newPassword) throw new Error("userId or password is missing");
-  const user = await userModel.findOne({ _id: userId }).select("+password");
+  const { id, newPassword } = payload;
+  if (!id || !newPassword) throw new Error("userId or password is missing");
+  const user = await userModel.findOne({ _id: id }).select("+password");
   if (!user) throw new Error("user does not found ");
-  await userModel.updateOne(
-    { _id: userId },
-    { password: encryption(newPassword) }
-  );
+  await userModel.updateOne({ _id: id }, { password: encryption(newPassword) });
   return "Passsword reset Successfully";
 };
 
@@ -122,12 +119,11 @@ const changePassword = async (payload) => {
 };
 
 const getProfile = (userId) => {
-  return userModel.findOne({ _id:userId });
+  return userModel.findOne({ _id: userId });
 };
 
 const updateProfile = async (userId, payload) => {
   const user = await userModel.findOne({ _id: userId });
-
   if (!user) throw new Error("User does not exists");
   await userModel.updateOne({ _id: user.id }, payload);
   return "user Updated Successfully";
