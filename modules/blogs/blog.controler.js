@@ -6,6 +6,10 @@ const create = (payload) => {
   return BlogModel.create(payload);
 };
 
+const getProducts = () => {
+  return BlogModel.find();
+};
+
 const getAll = () => {
   return BlogModel.aggregate([
     {
@@ -31,7 +35,6 @@ const getAll = () => {
         slug: 1,
         author: 0,
         author: "$result.name",
-        status: 1,
       },
     },
   ]);
@@ -53,4 +56,11 @@ const deleteById = (_id) => {
   return BlogModel.deleteOne({ _id });
 };
 
-module.exports = { create, getAll, getById, updateById, deleteById };
+module.exports = {
+  getProducts,
+  create,
+  getAll,
+  getById,
+  updateById,
+  deleteById,
+};

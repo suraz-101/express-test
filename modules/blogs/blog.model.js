@@ -8,9 +8,10 @@ const blogSchema = new mongoose.Schema({
   slug: { type: String, required: true, unique: true },
   author: {
     type: ObjectId,
-    ref: "User",
+    ref: "Users",
     required: [true, "Author is missing"],
   },
+  comments: { type: Number, default: 0 },
   words: { type: Number, default: 0 },
   status: { type: String, enum: ["published", "draft"], default: "draft" }, // [ published, draft] ??
   createAt: { type: Date, default: Date.now },
