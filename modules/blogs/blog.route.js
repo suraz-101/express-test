@@ -12,10 +12,10 @@ router.get("/", checkRole(["user", "admin"]), async (req, res, next) => {
   }
 });
 
-router.get("/getBlod", async (req, res, next) => {
+router.get("/:slug", async (req, res, next) => {
   try {
-    const { id } = req.body;
-    const result = await blogController.getById(id);
+    const { slug } = req.params;
+    const result = await blogController.getById(slug);
     res.json({ data: result });
   } catch (error) {
     next(error);

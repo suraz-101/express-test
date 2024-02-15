@@ -37,8 +37,8 @@ const getAll = () => {
   ]);
 };
 
-const getById = (_id) => {
-  return BlogModel.findOne({ _id });
+const getById = (slug) => {
+  return BlogModel.findOne({ slug });
 };
 
 const updateById = async (_id, payload) => {
