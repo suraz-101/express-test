@@ -1,11 +1,40 @@
 const BlogModel = require("./blog.model");
+const { generateSlug } = require("../../utils/slug");
 
 const create = (payload) => {
+  payload.slug = generateSlug(payload.title);
   return BlogModel.create(payload);
 };
 
 const getAll = () => {
-  return BlogModel.find();
+  return BlogModel.aggregate([
+    {
+      $lookup: {
+        from: "users",
+        localField: "author",
+        foreignField: "_id",
+        as: "result",
+      },
+    },
+    {
+      $unwind: {
+        path: "$result",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        title: 1,
+        tags: 1,
+        content: 1,
+        slug: 1,
+        author: 0,
+        author: "$result.name",
+        status: 1,
+      },
+    },
+  ]);
 };
 
 const getById = (_id) => {

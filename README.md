@@ -191,7 +191,8 @@ METHODS
 
 - Reset Password => only by admin
 - Change Password => only by user
-- update profile => only by user 
+- update profile => only by user
 
+# Day - 39 : 
 
-3 Day - 39 : 
+# Day - 40 : Aggregation and Pagination

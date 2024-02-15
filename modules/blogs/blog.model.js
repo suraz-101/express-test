@@ -5,6 +5,7 @@ const blogSchema = new mongoose.Schema({
   title: { type: String, required: [true, "Tile is missing"] },
   tags: { type: String }, //["Science", "mern-stack"] ??
   content: { type: String },
+  slug: { type: String, required: true, unique: true },
   author: {
     type: ObjectId,
     ref: "User",

@@ -22,10 +22,9 @@ router.get("/getBlod", async (req, res, next) => {
   }
 });
 
-router.post("/", validate, checkRole(["admin"]), async (req, res, next) => {
+router.post("/", validate, checkRole(["user"]), async (req, res, next) => {
   try {
-    const data = req.body;
-    const result = await blogController.create(data);
+    const result = await blogController.create(req.body);
     res.json({ data: result });
   } catch (err) {
     next(err);
@@ -43,7 +42,7 @@ router.put("/updateBlog", checkRole(["admin"]), async (req, res, next) => {
   }
 });
 
-router.patch("/:id", checkRole(["admin"]), (req, res, next) => {
+router.patch("/:id", checkRole(["user"]), (req, res, next) => {
   try {
     const { id } = req.params;
     res.json({ message: `We are inside patch request and the id is ${id}` });
@@ -52,7 +51,7 @@ router.patch("/:id", checkRole(["admin"]), (req, res, next) => {
   }
 });
 
-router.delete("/deleteBlog", checkRole(["admin"]), async (req, res, next) => {
+router.delete("/deleteBlog", checkRole(["user"]), async (req, res, next) => {
   try {
     const { id } = req.body;
     const result = await blogController.deleteById(id);

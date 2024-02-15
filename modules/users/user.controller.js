@@ -1,4 +1,4 @@
-const userSchema = require("./user.model");
+// const userModel = require("./user.model");
 const { encryption, decryption } = require("../../utils/bcrypt");
 const { mailler } = require("../../services/nodemailer");
 const { checkRole } = require("../../utils/sessionManager");
@@ -6,23 +6,23 @@ const { signJWT, otpCode } = require("../../utils/token");
 const userModel = require("./user.model");
 
 const createUser = (payload) => {
-  return userSchema.create(payload);
+  return userModel.create(payload);
 };
 
 const getAllUsers = () => {
-  return userSchema.find();
+  return userModel.find();
 };
 
 const getUserById = (_id) => {
-  return userSchema.findOne(_id);
+  return userModel.findOne(_id);
 };
 
 const updateUsersDetails = (_id, payload) => {
-  return userSchema.updateOne({ _id }, payload);
+  return userModel.updateOne({ _id }, payload);
 };
 
 const deleteUser = (_id) => {
-  return userSchema.deleteOne({ _id });
+  return userModel.deleteOne({ _id });
 };
 
 const registerUser = async (payload) => {
@@ -32,7 +32,7 @@ const registerUser = async (payload) => {
   payload.password = hashPass;
 
   // store payload into the database
-  const registeredUsers = await userSchema.create(payload);
+  const registeredUsers = await userModel.create(payload);
 
   // send mail if successfull
   if (!registeredUsers) throw new Error("Registration Failed");
@@ -51,7 +51,7 @@ const loginUser = async (payload) => {
   const { email, password } = payload;
   if (!email || !password)
     throw new Error("Please enter username and password");
-  const user = await userSchema.findOne({ email }).select("+password");
+  const user = await userModel.findOne({ email }).select("+password");
   if (!user) throw new Error("Email is invalid");
   const { password: hash } = user;
   const comparePassword = decryption(password, hash);
@@ -69,10 +69,10 @@ const loginUser = async (payload) => {
 const generateOTP = async (payload) => {
   const { email } = payload;
   if (!email) throw new Error("please enter email");
-  const user = await userSchema.findOne({ email });
+  // const user = await userModel.findOne({ email });
   if (!user) throw new Error("user does not exists");
   const otp = await otpCode();
-  await userSchema.updateOne({ email }, { otp });
+  // await userModel.updateOne({ email }, { otp });
   mailler(email, "  OTP", `Your otp code is : ${otp}`);
   return "Email is sent ";
 };
