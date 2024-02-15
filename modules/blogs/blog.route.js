@@ -24,6 +24,7 @@ router.get("/getAllProducts", checkRole(["user"]), async (req, res, next) => {
 router.get("/:slug", async (req, res, next) => {
   try {
     const { slug } = req.params;
+    console.log(slug);
     const result = await blogController.getById(slug);
     res.json({ data: result });
   } catch (error) {

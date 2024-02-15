@@ -1,5 +1,6 @@
 const BlogModel = require("./blog.model");
 const { generateSlug } = require("../../utils/slug");
+const { default: slugify } = require("slugify");
 
 const create = (payload) => {
   payload.slug = generateSlug(payload.title);
@@ -14,34 +15,99 @@ const getAll = () => {
   return BlogModel.aggregate([
     {
       $lookup: {
+        from: "comments",
+        localField: "_id",
+        foreignField: "postedTo",
+        as: "blogsComment",
+      },
+    },
+    {
+      $lookup: {
         from: "users",
         localField: "author",
         foreignField: "_id",
-        as: "result",
+        as: "author",
       },
     },
     {
       $unwind: {
-        path: "$result",
+        path: "$author",
         preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $addFields: {
+        numberOfComments: {
+          $size: "$blogsComment",
+        },
       },
     },
     {
       $project: {
         _id: 0,
         title: 1,
-        tags: 1,
         content: 1,
         slug: 1,
+        comment: 0,
+        comment: "$blogsComment.comment",
+        numberOfComments: 1,
         author: 0,
-        author: "$result.name",
+        author: "$author.name",
       },
     },
   ]);
 };
 
 const getById = (slug) => {
-  return BlogModel.findOne({ slug });
+  return BlogModel.aggregate([
+    {
+      $lookup: {
+        from: "comments",
+        localField: "_id",
+        foreignField: "postedTo",
+        as: "blogsComment",
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "author",
+        foreignField: "_id",
+        as: "author",
+      },
+    },
+    {
+      $unwind: {
+        path: "$author",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $addFields: {
+        numberOfComments: {
+          $size: "$blogsComment",
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        title: 1,
+        content: 1,
+        slug: 1,
+        comment: 0,
+        comment: "$blogsComment.comment",
+        numberOfComments: 1,
+        author: 0,
+        author: "$author.name",
+      },
+    },
+    {
+      $match: {
+        slug: `${slug}`,
+      },
+    },
+  ]);
 };
 
 const updateById = async (_id, payload) => {
