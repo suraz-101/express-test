@@ -193,6 +193,92 @@ METHODS
 - Change Password => only by user
 - update profile => only by user
 
-# Day - 39 : 
+# Day - 39 : getUserProfile and updateProfile
 
 # Day - 40 : Aggregation and Pagination
+
+- learning aggregation in mongodb
+
+=> $lookup, $unwind and $project
+
+=>FIRST STEP:
+for Instance: In blog collection there is a field called author which holds the id of the user who posted the blog. For security purpose we cannot show the id of the user instead we need the name of the specific user whose id is mentioned on on the field. So, for that purpose we need to do the aggregation which groups the mnultiple collections and convert into sinple collection. Very first step is to do lookup :
+
+==============================================> STEPS FOR AGGREGATION IN MONGODB COMPASS <============================================================
+
+To perform aggregation on certain collection we need to open Mongodbcompass. Then click on connect. In our case , as we are building blog app, we need to click on blog-app collection> click on blog collection> click on Aggregation> Click on AddStage button and search for the aggregation that we are going to use.
+
+In our case we need to first lookup for so type lookup at the Stage 1 input field.
+
+syntax of our case:
+
+                    {
+                    from: "users",
+                    localField: "author",
+                    foreignField: "\_id",
+                    as: "author"
+                    }
+
+=>SECOND STEP:
+
+Again click on AddStage and search for unwind:
+
+- path: Path to the array field.
+- preserveNullAndEmptyArrays: Optional
+- toggle to unwind null and empty values.
+
+         {
+         path: "$author",
+         preserveNullAndEmptyArrays: true
+         }
+
+=> THIRD STEP:
+
+Again click on AddStage and search for project:
+
+- specifications: The fields to
+- include or exclude.
+
+            {
+                _id:0,
+                title:1,
+                content:1,
+                author:0,
+                author: "$author.name"
+            }
+
+In case of "\_id", 0 indicate false which means that in aggregate id field is excluded where as author field will contain the name of the author instead of id.
+
+Now, we can export the code by clicking on Export button at the right side of the screen and copy the code and then include on model inside aggregate([collection of above code ]) as follows:
+
+For instance:
+
+    const getAll = () => {
+    return BlogModel.aggregate([
+        {
+        $lookup: {
+            from: "users",
+            localField: "author",
+            foreignField: "_id",
+            as: "result",
+        },
+        },
+        {
+        $unwind: {
+            path: "$result",
+            preserveNullAndEmptyArrays: true,
+        },
+        },
+        {
+        $project: {
+            _id: 0,
+            title: 1,
+            tags: 1,
+            content: 1,
+            slug: 1,
+            author: 0,
+            author: "$result.name",
+        },
+        },
+    ]);
+    };
