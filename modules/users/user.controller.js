@@ -9,7 +9,7 @@ const createUser = (payload) => {
   return userModel.create(payload);
 };
 
-const getAllUsers = async (search, page = 1, limit = 1) => {
+const getAllUsers = async (search, page = 1, limit = 2) => {
   const querry = [];
   if (search?.name) {
     querry.push({

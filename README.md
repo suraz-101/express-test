@@ -291,5 +291,9 @@ For instance:
 
 => Pagination, sorting and searching
 
+    - Pagination
+    - Searching 
+    - Report Generation
+
 => using token , automatically assign authors for user role
 => else for admin as for userId

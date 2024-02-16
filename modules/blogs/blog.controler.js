@@ -11,7 +11,7 @@ const getProducts = () => {
   return BlogModel.find();
 };
 
-const getAll = (search, page = 1, limit = 2) => {
+const getAll = async (search, page = 1, limit = 3) => {
   // const { title, author } = search;
   const querry = [];
   console.log(search.author);
@@ -78,7 +78,16 @@ const getAll = (search, page = 1, limit = 2) => {
     });
   }
 
-  return BlogModel.aggregate(querry);
+  const blogs = await BlogModel.aggregate(querry);
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+
+  const data = blogs.slice(startIndex, endIndex);
+  return {
+    data: data,
+    page: page,
+    limit: limit,
+  };
 };
 
 const getById = (slug) => {
