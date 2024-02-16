@@ -5,7 +5,9 @@ const { checkRole } = require("../../utils/sessionManager");
 
 router.get("/", checkRole(["user", "admin"]), async (req, res, next) => {
   try {
-    const result = await blogController.getAll();
+    const { title, author, page, limit } = req.query;
+    const search = { title, author };
+    const result = await blogController.getAll(search, page, limit);
     res.json({ data: result });
   } catch (error) {
     next(error);

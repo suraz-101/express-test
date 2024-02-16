@@ -2,8 +2,6 @@ const BlogModel = require("./blog.model");
 const { generateSlug } = require("../../utils/slug");
 const { default: slugify } = require("slugify");
 
-const querry = [];
-
 const create = (payload) => {
   payload.slug = generateSlug(payload.title);
   return BlogModel.create(payload);
@@ -13,8 +11,17 @@ const getProducts = () => {
   return BlogModel.find();
 };
 
-const getAll = () => {
-  return BlogModel.aggregate([
+const getAll = (search, page = 1, limit = 2) => {
+  // const { title, author } = search;
+  const querry = [];
+  console.log(search.author);
+  querry.push({
+    $sort: {
+      createAt: -1,
+    },
+  });
+
+  querry.push(
     {
       $lookup: {
         from: "comments",
@@ -56,8 +63,22 @@ const getAll = () => {
         author: 0,
         author: "$author.name",
       },
-    },
-  ]);
+    }
+  );
+
+  if (search?.title) {
+    querry.push({
+      $match: { title: new RegExp(search.title, "gi") },
+    });
+  }
+
+  if (search?.author) {
+    querry.push({
+      $match: { author: new RegExp(search.author, "gi") },
+    });
+  }
+
+  return BlogModel.aggregate(querry);
 };
 
 const getById = (slug) => {

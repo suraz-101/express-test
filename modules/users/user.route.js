@@ -14,6 +14,7 @@ const { checkRole } = require("../../utils/sessionManager");
 router.get("/", checkRole(["user"]), async (req, res, next) => {
   try {
     const { limit, page, name, role } = req.query;
+    // console.log(req.query);
     const search = { name, role };
     console.log(search);
 
