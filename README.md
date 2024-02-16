@@ -282,3 +282,14 @@ For instance:
         },
     ]);
     };
+
+# Day - 41 : Aggregation and Pagination Part 2
+
+=> Aggregation usercase
+
+    - multiple collection join
+
+=> Pagination, sorting and searching
+
+=> using token , automatically assign authors for user role
+=> else for admin as for userId

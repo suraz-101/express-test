@@ -2,6 +2,8 @@ const BlogModel = require("./blog.model");
 const { generateSlug } = require("../../utils/slug");
 const { default: slugify } = require("slugify");
 
+const querry = [];
+
 const create = (payload) => {
   payload.slug = generateSlug(payload.title);
   return BlogModel.create(payload);

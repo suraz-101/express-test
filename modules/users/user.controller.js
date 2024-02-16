@@ -9,8 +9,77 @@ const createUser = (payload) => {
   return userModel.create(payload);
 };
 
-const getAllUsers = () => {
-  return userModel.find();
+const getAllUsers = async (search, page = 1, limit = 1) => {
+  const querry = [];
+  if (search?.name) {
+    querry.push({
+      $match: {
+        name: new RegExp(search.name, "gi"),
+      },
+    });
+  }
+  if (search?.role) {
+    querry.push({
+      $match: {
+        role: [search.role],
+      },
+    });
+  }
+
+  //sorting
+  querry.push({
+    $sort: {
+      createdAt: 1,
+    },
+  });
+
+  //pagination
+
+  querry.push(
+    {
+      $facet: {
+        metadata: [
+          {
+            $count: "total",
+          },
+        ],
+        data: [
+          {
+            $skip: (+page - 1) * +limit,
+          },
+          {
+            $limit: +limit,
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        total: {
+          $arrayElemAt: ["$metadata.total", 0],
+        },
+      },
+    },
+    {
+      $project: {
+        total: 1,
+        data: 1,
+      },
+    },
+    {
+      $project: {
+        "data.password": 0,
+      },
+    }
+  );
+
+  const result = await userModel.aggregate(querry);
+  return {
+    data: result[0].data,
+    total: result[0].total || 0,
+    page: +page,
+    limit: +limit,
+  };
 };
 
 const getUserById = (_id) => {

@@ -11,9 +11,17 @@ const nodemailer = require("nodemailer");
 const { checkRole } = require("../../utils/sessionManager");
 
 // this is only accessible by admin only
-router.get("/", checkRole(["user"]), async (req, res) => {
-  const result = await userController.getAllUsers();
-  res.json({ data: result });
+router.get("/", checkRole(["user"]), async (req, res, next) => {
+  try {
+    const { limit, page, name, role } = req.query;
+    const search = { name, role };
+    console.log(search);
+
+    const result = await userController.getAllUsers(search, page, limit);
+    res.json({ data: result });
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.post("/", validate, checkRole("admin"), async (req, res) => {
