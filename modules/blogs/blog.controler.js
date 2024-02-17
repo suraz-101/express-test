@@ -63,6 +63,12 @@ const getAll = async (search, page = 1, limit = 3) => {
         author: 0,
         author: "$author.name",
       },
+    },
+    {
+      $limit: +limit,
+    },
+    {
+      $skip: (+page - 1) * +limit,
     }
   );
 
@@ -78,11 +84,11 @@ const getAll = async (search, page = 1, limit = 3) => {
     });
   }
 
-  const blogs = await BlogModel.aggregate(querry);
-  const startIndex = (page - 1) * limit;
-  const endIndex = startIndex + limit;
+  const data = await BlogModel.aggregate(querry);
+  // const startIndex = (page - 1) * limit;
+  // const endIndex = startIndex + limit;
 
-  const data = blogs.slice(startIndex, endIndex);
+  // const data = blogs.slice(startIndex, endIndex);
   return {
     data: data,
     page: page,
