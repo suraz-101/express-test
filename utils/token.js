@@ -1,5 +1,6 @@
 // require("dotenv").config();
 const JWT = require("jsonwebtoken");
+const crypt = require("crypto");
 
 const signJWT = (payload) => {
   return JWT.sign(
@@ -16,9 +17,7 @@ const verifyJWT = (token) => {
 };
 
 const otpCode = () => {
-  var minm = 100000;
-  var maxm = 999999;
-  return Math.floor(Math.random() * (maxm - minm + 1)) + minm;
+  return crypto.randomInt(100000, 999999);
 };
 
 module.exports = { signJWT, verifyJWT, otpCode };

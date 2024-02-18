@@ -14,14 +14,18 @@ router.get("/", checkRole(["user", "admin"]), async (req, res, next) => {
   }
 });
 
-router.get("/getAllProducts", checkRole(["user"]), async (req, res, next) => {
-  try {
-    const result = await blogController.getProducts();
-    res.status(200).json({ message: result });
-  } catch (error) {
-    nect(error);
+router.get(
+  "/getPublishedBlogs",
+  checkRole(["user"]),
+  async (req, res, next) => {
+    try {
+      const result = await blogController.getPublishedBlogs();
+      res.status(200).json({ message: result });
+    } catch (error) {
+      nect(error);
+    }
   }
-});
+);
 
 router.get("/:slug", async (req, res, next) => {
   try {
@@ -34,7 +38,7 @@ router.get("/:slug", async (req, res, next) => {
   }
 });
 
-router.post("/", validate, checkRole(["user"]), async (req, res, next) => {
+router.post("/", checkRole(["user"]), validate, async (req, res, next) => {
   try {
     const result = await blogController.create(req.body);
     res.json({ data: result });

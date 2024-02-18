@@ -7,8 +7,8 @@ const create = (payload) => {
   return BlogModel.create(payload);
 };
 
-const getProducts = () => {
-  return BlogModel.find();
+const getPublishedBlogs = () => {
+  return BlogModel.find({ status: "published" });
 };
 
 const getAll = async (search, page = 1, limit = 3) => {
@@ -62,6 +62,7 @@ const getAll = async (search, page = 1, limit = 3) => {
         numberOfComments: 1,
         author: 0,
         author: "$author.name",
+        status: 1,
       },
     },
     {
@@ -161,7 +162,7 @@ const deleteById = (_id) => {
 };
 
 module.exports = {
-  getProducts,
+  getPublishedBlogs,
   create,
   getAll,
   getById,
