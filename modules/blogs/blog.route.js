@@ -8,7 +8,7 @@ router.get("/", checkRole(["user", "admin"]), async (req, res, next) => {
     const { title, author, page, limit } = req.query;
     const search = { title, author };
     const result = await blogController.getAll(search, page, limit);
-    res.json({ data: result });
+    res.json({ message: result });
   } catch (error) {
     next(error);
   }

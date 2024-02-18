@@ -17,38 +17,36 @@ const getAll = async (search, page = 1, limit = 3) => {
   console.log(search.author);
   querry.push({
     $sort: {
-      createAt: -1,
+      createAt: 1,
     },
   });
 
   querry.push(
     {
       $lookup: {
-        from: "comments",
-        localField: "_id",
-        foreignField: "postedTo",
-        as: "blogsComment",
+        from: "users",
+        localField: "author",
+        foreignField: "_id",
+        as: "BlogAuthor",
       },
     },
     {
       $lookup: {
-        from: "users",
-        localField: "author",
-        foreignField: "_id",
-        as: "author",
+        from: "comments",
+        localField: "_id",
+        foreignField: "postedTo",
+        as: "BlogComment",
       },
     },
     {
       $unwind: {
-        path: "$author",
+        path: "$BlogAuthor",
         preserveNullAndEmptyArrays: true,
       },
     },
     {
       $addFields: {
-        numberOfComments: {
-          $size: "$blogsComment",
-        },
+        author: "$BlogAuthor.name",
       },
     },
     {
@@ -60,41 +58,67 @@ const getAll = async (search, page = 1, limit = 3) => {
         comment: 0,
         comment: "$blogsComment.comment",
         numberOfComments: 1,
-        author: 0,
-        author: "$author.name",
+        author: 1,
         status: 1,
       },
-    },
-    {
-      $limit: +limit,
-    },
-    {
-      $skip: (+page - 1) * +limit,
     }
   );
 
   if (search?.title) {
     querry.push({
-      $match: { title: new RegExp(search.title, "gi") },
+      $match: {
+        title: new RegExp(`${search.title}`, "gi"),
+      },
     });
   }
-
   if (search?.author) {
     querry.push({
-      $match: { author: new RegExp(search.author, "gi") },
+      $match: {
+        author: new RegExp(`${search.author}`, "gi"),
+      },
     });
   }
 
-  const data = await BlogModel.aggregate(querry);
+  querry.push({
+    $facet: {
+      metadata: [
+        {
+          $count: "total",
+        },
+      ],
+      data: [
+        {
+          $skip: (+page - 1) * +limit,
+        },
+        {
+          $limit: +limit,
+        },
+      ],
+    },
+  });
+
+  // return await BlogModel.aggregate(querry);
+
+  const result = await BlogModel.aggregate(querry);
+  // return result;
+  return {
+    data: result[0].data,
+    total: result[0].metadata[0].total,
+    page: page,
+    limit: limit,
+  };
+  // console.log(data]);
   // const startIndex = (page - 1) * limit;
   // const endIndex = startIndex + limit;
 
   // const data = blogs.slice(startIndex, endIndex);
-  return {
-    data: data,
-    page: page,
-    limit: limit,
-  };
+  // return {
+  //   data: data[0],
+  //   total: data[0].metadata[0].total,
+
+  //   page: Number(page),
+  //   limit: Number(limit),
+  // };
 };
 
 const getById = (slug) => {

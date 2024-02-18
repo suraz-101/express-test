@@ -19,13 +19,13 @@ router.get("/", checkRole(["user"]), async (req, res, next) => {
     console.log(search);
 
     const result = await userController.getAllUsers(search, page, limit);
-    res.json({ data: result });
+    res.json({ message: result });
   } catch (error) {
     next(error);
   }
 });
 
-router.post("/", validate, checkRole("admin"), async (req, res) => {
+router.post("/", validate, async (req, res) => {
   const userData = req.body;
   const result = await userController.createUser(userData);
   res.json({ data: result });
