@@ -19,10 +19,16 @@ router.get(
   checkRole(["user"]),
   async (req, res, next) => {
     try {
-      const result = await blogController.getPublishedBlogs();
+      const { status, page, limit } = req.headers;
+      const search = { status };
+      const result = await blogController.getPublishedBlogs(
+        search,
+        page,
+        limit
+      );
       res.status(200).json({ message: result });
     } catch (error) {
-      nect(error);
+      next(error);
     }
   }
 );

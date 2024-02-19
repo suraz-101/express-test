@@ -7,12 +7,58 @@ const create = (payload) => {
   return BlogModel.create(payload);
 };
 
-const getPublishedBlogs = () => {
-  return BlogModel.find({ status: "published" });
+const getPublishedBlogs = async (search, page = 1, limit = 3) => {
+  const query = [];
+  if (search?.status) {
+    query.push({
+      $match: {
+        status: `${search.status}`,
+      },
+    });
+  }
+
+  query.push(
+    {
+      $lookup: {
+        from: "users",
+        localField: "author",
+        foreignField: "_id",
+        as: "blogAuthor",
+      },
+    },
+    {
+      $unwind: {
+        path: "$blogAuthor",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        title: 1,
+        content: 1,
+        author: 0,
+        author: "$blogAuthor.name",
+        status: 1,
+      },
+    },
+    {
+      $facet: {
+        metadata: [{ $count: "total" }],
+        data: [{ $skip: (+page - 1) * +limit }, { $limit: +limit }],
+      },
+    }
+  );
+  const result = await BlogModel.aggregate(query);
+  return {
+    data: result[0].data,
+    total: result[0].metadata[0].total,
+    page: page,
+    limit: limit,
+  };
 };
 
 const getAll = async (search, page = 1, limit = 3) => {
-  // const { title, author } = search;
   const querry = [];
   console.log(search.author);
   querry.push({
@@ -97,28 +143,13 @@ const getAll = async (search, page = 1, limit = 3) => {
     },
   });
 
-  // return await BlogModel.aggregate(querry);
-
   const result = await BlogModel.aggregate(querry);
-  // return result;
   return {
     data: result[0].data,
     total: result[0].metadata[0].total,
     page: page,
     limit: limit,
   };
-  // console.log(data]);
-  // const startIndex = (page - 1) * limit;
-  // const endIndex = startIndex + limit;
-
-  // const data = blogs.slice(startIndex, endIndex);
-  // return {
-  //   data: data[0],
-  //   total: data[0].metadata[0].total,
-
-  //   page: Number(page),
-  //   limit: Number(limit),
-  // };
 };
 
 const getById = (slug) => {
