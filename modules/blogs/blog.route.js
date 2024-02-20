@@ -3,7 +3,7 @@ const blogController = require("./blog.controler");
 const { validate } = require("./blog.validator");
 const { checkRole } = require("../../utils/sessionManager");
 
-router.get("/", checkRole(["user", "admin"]), async (req, res, next) => {
+router.get("/", checkRole(["admin"]), async (req, res, next) => {
   try {
     const { title, author, page, limit } = req.query;
     const search = { title, author };
@@ -16,7 +16,7 @@ router.get("/", checkRole(["user", "admin"]), async (req, res, next) => {
 
 router.get(
   "/getPublishedBlogs",
-  checkRole(["user"]),
+  checkRole(["user", "admin"]),
   async (req, res, next) => {
     try {
       const { status, page, limit } = req.headers;
@@ -32,8 +32,22 @@ router.get(
     }
   }
 );
+router.get(
+  "/authorBlog",
+  checkRole(["admin", "user"]),
+  async (req, res, next) => {
+    try {
+      const { author, title, page, limit } = req.query;
+      const search = { author, title };
+      const result = await blogController.getAuthorBlog(search, page, limit);
+      res.status(200).json({ message: result });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
-router.get("/:slug", async (req, res, next) => {
+router.get("/slug/:slug", async (req, res, next) => {
   try {
     const { slug } = req.params;
     console.log(slug);
@@ -64,23 +78,28 @@ router.put("/updateBlog", checkRole(["admin"]), async (req, res, next) => {
   }
 });
 
-router.patch("/:id", checkRole(["user"]), (req, res, next) => {
+router.patch("/status/:id", checkRole(["user"]), async (req, res, next) => {
   try {
     const { id } = req.params;
-    res.json({ message: `We are inside patch request and the id is ${id}` });
+    const result = await blogController.updateTheStatusOnly(id);
+    res.json({ message: result });
   } catch (err) {
     next(err);
   }
 });
 
-router.delete("/deleteBlog", checkRole(["user"]), async (req, res, next) => {
-  try {
-    const { id } = req.body;
-    const result = await blogController.deleteById(id);
-    res.json({ message: result });
-  } catch (error) {
-    next();
+router.delete(
+  "/deleteBlog/:id",
+  checkRole(["user"]),
+  async (req, res, next) => {
+    try {
+      const { id } = req.body;
+      const result = await blogController.deleteById(id);
+      res.json({ message: result });
+    } catch (error) {
+      next();
+    }
   }
-});
+);
 
 module.exports = router;

@@ -153,6 +153,8 @@ const getAll = async (search, page = 1, limit = 3) => {
 };
 
 const getById = (slug) => {
+  const query = [];
+  query.push();
   return BlogModel.aggregate([
     {
       $lookup: {
@@ -205,15 +207,87 @@ const getById = (slug) => {
 };
 
 const updateById = async (_id, payload) => {
+  delete payload.slug;
+  if (payload.title) payload.slug = generateSlug(payload.title);
   if (!_id) throw new Error("Id is required");
   const blog = await BlogModel.findOne({ _id });
   if (!blog) throw new Error("Blog didn't found!!");
+
   await BlogModel.updateOne({ _id: blog.id }, payload);
   return "Blog updated successfully";
 };
 
 const deleteById = (_id) => {
   return BlogModel.deleteOne({ _id });
+};
+
+const getAuthorBlog = async (search, page = 1, limit = 3) => {
+  const query = [];
+
+  query.push(
+    {
+      $lookup: {
+        from: "users",
+        localField: "author",
+        foreignField: "_id",
+        as: "result",
+      },
+    },
+    {
+      $unwind: {
+        path: "$result",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        title: 1,
+        tags: 1,
+        content: 1,
+        slug: 1,
+        author: 0,
+        author: "$result.name",
+      },
+    }
+  );
+
+  if (search?.author) {
+    query.push({
+      $match: {
+        author: new RegExp(search.author, "gi"),
+      },
+    });
+  }
+
+  if (search?.title) {
+    query.push({
+      $match: {
+        title: new RegExp(search.title, "gi"),
+      },
+    });
+  }
+
+  query.push({
+    $facet: {
+      metadata: [{ $count: "total" }],
+      data: [{ $skip: (+page - 1) * +limit }, { $limit: +limit }],
+    },
+  });
+  const result = await BlogModel.aggregate(query);
+  return {
+    data: result[0].data,
+    total: result[0].metadata[0].total,
+    page: +page,
+    limit: +limit,
+  };
+};
+
+const updateTheStatusOnly = async (_id) => {
+  const blog = await BlogModel.findOne(_id);
+  if (!blog) throw new Error("Blog not Found");
+  const payload = { status: blog?.status === "draft" ? "published" : "draft" };
+  return BlogModel.updateOne({ _id }, payload);
 };
 
 module.exports = {
@@ -223,4 +297,6 @@ module.exports = {
   getById,
   updateById,
   deleteById,
+  getAuthorBlog,
+  updateTheStatusOnly,
 };

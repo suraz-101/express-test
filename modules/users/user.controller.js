@@ -132,6 +132,7 @@ const loginUser = async (payload) => {
   };
 
   const token = await signJWT(userPayload);
+
   return token;
 };
 

@@ -300,4 +300,4 @@ For instance:
 
 # Day - 42 : User Management Wrapup
 
-=>
+# Day - 43 : Blog Management Wrapup
