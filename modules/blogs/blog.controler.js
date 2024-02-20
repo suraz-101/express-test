@@ -2,6 +2,62 @@ const BlogModel = require("./blog.model");
 const { generateSlug } = require("../../utils/slug");
 const { default: slugify } = require("slugify");
 
+//cooming querry that can be used in different functions which reduces the code redundancy and easy while updating
+const commonQuerry = [
+  {
+    $lookup: {
+      from: "users",
+      localField: "author",
+      foreignField: "_id",
+      as: "BlogAuthor",
+    },
+  },
+  {
+    $lookup: {
+      from: "comments",
+      localField: "_id",
+      foreignField: "postedTo",
+      as: "BlogComments",
+    },
+  },
+  {
+    $unwind: {
+      path: "$BlogAuthor",
+      preserveNullAndEmptyArrays: true,
+    },
+  },
+  {
+    $addFields: {
+      author: "$BlogAuthor.name",
+      numberOfComments: { $size: "$BlogComments" },
+    },
+  },
+];
+
+//commong pagination query that can be used in multiple functions (almost all the functions)
+const facetQuerry = (page, limit) => {
+  const array = [
+    {
+      $facet: {
+        metadata: [
+          {
+            $count: "total",
+          },
+        ],
+        data: [
+          {
+            $skip: (+page - 1) * +limit,
+          },
+          {
+            $limit: +limit,
+          },
+        ],
+      },
+    },
+  ];
+  return array;
+};
+
 const create = (payload) => {
   payload.slug = generateSlug(payload.title);
   return BlogModel.create(payload);
@@ -17,99 +73,64 @@ const getPublishedBlogs = async (search, page = 1, limit = 3) => {
     });
   }
 
-  query.push(
-    {
-      $lookup: {
-        from: "users",
-        localField: "author",
-        foreignField: "_id",
-        as: "blogAuthor",
-      },
+  // using common querry that can used to merger users, comments and blog collection using lookup and unqind
+  query.push.apply(query, commonQuerry);
+
+  // query to show the neccessary field
+  query.push({
+    $project: {
+      _id: 0,
+      title: 1,
+      content: 1,
+      author: 0,
+      author: 1,
+      slug: 1,
+      status: 1,
+      comments: "$BlogComments.comment",
+      numberOfComments: 1,
     },
-    {
-      $unwind: {
-        path: "$blogAuthor",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-    {
-      $project: {
-        _id: 0,
-        title: 1,
-        content: 1,
-        author: 0,
-        author: "$blogAuthor.name",
-        status: 1,
-      },
-    },
-    {
-      $facet: {
-        metadata: [{ $count: "total" }],
-        data: [{ $skip: (+page - 1) * +limit }, { $limit: +limit }],
-      },
-    }
-  );
+  });
+
+  //using commong pagination query that can be used in getAll product as well
+  query.push.apply(query, facetQuerry(page, limit));
+
   const result = await BlogModel.aggregate(query);
   return {
     data: result[0].data,
     total: result[0].metadata[0].total,
-    page: page,
-    limit: limit,
+    page: +page,
+    limit: +limit,
   };
 };
 
 const getAll = async (search, page = 1, limit = 3) => {
   const querry = [];
-  console.log(search.author);
+  // filter the data according to last createdAt
   querry.push({
     $sort: {
       createAt: 1,
     },
   });
+  // query to merger users and comments and blogs collection
+  //commong code that can be repeated where we need to merger users and comment collections
+  querry.push.apply(querry, commonQuerry); // => to merge two different array use syntax ==>  oldArray.push.apply(oldArray,newArray);
 
-  querry.push(
-    {
-      $lookup: {
-        from: "users",
-        localField: "author",
-        foreignField: "_id",
-        as: "BlogAuthor",
-      },
+  // query to include different fields of the colletions
+  querry.push({
+    $project: {
+      _id: 1,
+      title: 1,
+      content: 1,
+      author: 0,
+      author: 1,
+      slug: 1,
+      status: 1,
+      comments: "$BlogComments.comment",
+      numberOfComments: 1,
     },
-    {
-      $lookup: {
-        from: "comments",
-        localField: "_id",
-        foreignField: "postedTo",
-        as: "BlogComment",
-      },
-    },
-    {
-      $unwind: {
-        path: "$BlogAuthor",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-    {
-      $addFields: {
-        author: "$BlogAuthor.name",
-      },
-    },
-    {
-      $project: {
-        _id: 0,
-        title: 1,
-        content: 1,
-        slug: 1,
-        comment: 0,
-        comment: "$blogsComment.comment",
-        numberOfComments: 1,
-        author: 1,
-        status: 1,
-      },
-    }
-  );
+  });
 
+  //query to search based on title and author name
   if (search?.title) {
     querry.push({
       $match: {
@@ -125,30 +146,15 @@ const getAll = async (search, page = 1, limit = 3) => {
     });
   }
 
-  querry.push({
-    $facet: {
-      metadata: [
-        {
-          $count: "total",
-        },
-      ],
-      data: [
-        {
-          $skip: (+page - 1) * +limit,
-        },
-        {
-          $limit: +limit,
-        },
-      ],
-    },
-  });
+  // using commong wuery for pagination which can be used in get published blogs  as well
+  querry.push.apply(querry, facetQuerry(page, limit));
 
   const result = await BlogModel.aggregate(querry);
   return {
     data: result[0].data,
     total: result[0].metadata[0].total,
-    page: page,
-    limit: limit,
+    page: +page,
+    limit: +limit,
   };
 };
 
@@ -268,12 +274,8 @@ const getAuthorBlog = async (search, page = 1, limit = 3) => {
     });
   }
 
-  query.push({
-    $facet: {
-      metadata: [{ $count: "total" }],
-      data: [{ $skip: (+page - 1) * +limit }, { $limit: +limit }],
-    },
-  });
+  //using commong pagination query that can be used in getAll product as well
+  query.push.apply(query, facetQuerry(page, limit));
   const result = await BlogModel.aggregate(query);
   return {
     data: result[0].data,

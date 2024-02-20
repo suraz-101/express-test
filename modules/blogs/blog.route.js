@@ -3,7 +3,7 @@ const blogController = require("./blog.controler");
 const { validate } = require("./blog.validator");
 const { checkRole } = require("../../utils/sessionManager");
 
-router.get("/", checkRole(["admin"]), async (req, res, next) => {
+router.get("/", checkRole(["user"]), async (req, res, next) => {
   try {
     const { title, author, page, limit } = req.query;
     const search = { title, author };
