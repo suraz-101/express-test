@@ -14,7 +14,8 @@ const blogSchema = new mongoose.Schema(
     },
     comments: { type: Number, default: 0 },
     words: { type: Number, default: 0 },
-    status: { type: String, enum: ["published", "draft"], default: "draft" }, // [ published, draft] ??
+    status: { type: String, enum: ["published", "draft"], default: "draft" },
+    blogImage: { type: String }, // [ published, draft] ??
     // createAt: { type: Date, default: Date.now },
     // updatedAt: { type: Date, default: Date.now },
   },

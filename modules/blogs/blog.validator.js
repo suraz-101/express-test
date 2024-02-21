@@ -7,6 +7,7 @@ const Schema = Joi.object({
   author: Joi.string().required(),
   words: Joi.number(),
   status: Joi.string(),
+  blogImage: Joi.string(),
 });
 
 const validate = (req, res, next) => {

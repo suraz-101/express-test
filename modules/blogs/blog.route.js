@@ -2,6 +2,18 @@ const router = require("express").Router();
 const blogController = require("./blog.controler");
 const { validate } = require("./blog.validator");
 const { checkRole } = require("../../utils/sessionManager");
+const multer = require("multer");
+
+const blogImageStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./public/blog");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const uploadBlogImage = multer({ storage: blogImageStorage });
 
 router.get("/", checkRole(["user"]), async (req, res, next) => {
   try {
@@ -58,14 +70,25 @@ router.get("/slug/:slug", async (req, res, next) => {
   }
 });
 
-router.post("/", checkRole(["user"]), validate, async (req, res, next) => {
-  try {
-    const result = await blogController.create(req.body);
-    res.json({ data: result });
-  } catch (err) {
-    next(err);
+router.post(
+  "/",
+  uploadBlogImage.single("blogImg"),
+  checkRole(["user"]),
+  validate,
+  async (req, res, next) => {
+    try {
+      uploadBlogImage.single("blogImage");
+      console.log(req.body);
+      console.log(req.files);
+      req.body.blogImage = req.file.path.replace("public", "");
+      console.log(req.body);
+      const result = await blogController.create(req.body);
+      res.json({ data: result });
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 router.put("/updateBlog", checkRole(["admin"]), async (req, res, next) => {
   try {

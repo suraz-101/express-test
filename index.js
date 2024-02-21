@@ -1,12 +1,17 @@
 require("dotenv").config(); // configuring dotenv file
 const express = require("express");
-const middleware = require("./middleware");
 const morgan = require("morgan"); //logger
 const mongoose = require("mongoose");
 const PORT = Number(process.env.PORT);
 const route = require("./routes/index");
+// const multer = require("multer"); //=> used to handle multipart/form-data contentType
+// const upload = multer(); //=> is used to accept multipart/form-data conentType
+
+// const bodyParser = require("body-parser");
 
 const app = express();
+// app.use(upload.any()); //
+// app.use(require("multer"));
 
 mongoose.connect(process.env.CONNECTION).then(() => {
   console.log("database connected");
@@ -14,7 +19,7 @@ mongoose.connect(process.env.CONNECTION).then(() => {
 
 app.use(morgan("dev")); // checking log
 // app.use(express.urlencoded());
-app.use(express.json()); // for req.body
+app.use(express.json()); // is used to accept json body content type (application/json)
 app.use(express.static("public")); //access images
 // app.use(morgan("dev"));
 

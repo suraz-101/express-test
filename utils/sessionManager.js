@@ -13,6 +13,7 @@ const checkRole = (sysRole) => {
     req.body.author = role.includes("user")
       ? user._id.toString()
       : req.body.author;
+
     next();
   };
 };
