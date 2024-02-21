@@ -15,10 +15,7 @@ const storage = multer.diskStorage({
     cb(null, "./public/images"); //make sure the new folders are in the public folder
   },
   filename: function (req, file, cb) {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + "." + file.originalname.split(".")[1]
-    );
+    cb(null, `${Date.now()}-${file.originalname}`);
     // console.log(file.originalname.split("."));
   },
 });
@@ -67,11 +64,14 @@ router.post(
   validate,
   async (req, res, next) => {
     console.log(req.file);
+    console.log(req.body);
     try {
       if (req.file) {
         const { path } = req.file;
         req.body.profilePic = path.replace("public", "");
       }
+
+      console.log(req.body);
       const result = await userController.registerUser(req.body);
       res.status(200).json({ message: result });
     } catch (error) {

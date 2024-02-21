@@ -303,3 +303,105 @@ For instance:
 # Day - 43 : Blog Management Wrapup
 
 # Day - 44 : File Upload
+
+=> while registering users into the database we need to accept multiple datatypes in a single request for instance, we need to send file as well as other text data like name, email, password and so on. So, this can be only possible to send data using multipart/form-data. In express server body parser does not handles the file uploades natively but a npm package called "Multer" handles the request with content type => multipart/form-data.So, to handle the multipart/form-data we will use multer npm package.
+
+STEPS TO UPLOAD FILES INTO DATABASE AND SAVE TO PROJECT DIRECTORY USING MULTER
+
+1.  Install multer package using using:
+
+        npm i multer --save
+
+2.  import the multer :
+
+        const multer = require("multer);
+
+3.  Defining the storage location
+
+    => create a folder in the root directory. In our case we have created publi folder inside which we have created images folder where we are going to store all the files.
+
+    => We are going to store data in disk storage so we are going to use disktorage to store the files and setup the destination and filename that is going to be saved into the folder. So following code is used :
+
+            const storage = multer.diskStorage({
+                destination: function (req, file, cb) {
+                    cb(null, "./public/images");
+                },
+                filename: function (req, file, cb) {
+                    cb(null, `${Date.now()}-${file.originalname}`);
+                    // console.log(file.originalname.split("."));
+                },
+                });
+
+    => In above code we have set the destination as ./public/images where we are going to save files and the filename determines what a file should be named in the folder. In this example, we use Date.now() to generate a unique timestamp for each uploaded file, which helps prevent filename clashes.
+
+4.  After defining the storage location create an instance of multer by calling multer({storage}) as follows:
+
+            const upload = multer({storage:storage});
+
+5.  Now we can use upload instance to store files into database and save file to project folder as follows:
+
+               router.post(
+               "/register",
+               upload.single("profilePic"),
+               validate,
+               async (req, res, next) => {
+                   console.log(req.file);
+                   console.log(req.body);
+                   try {
+                   if (req.file) {
+                       const { path } = req.file;
+                       req.body.profilePic = path.replace("public", "");
+                   }
+                   const result = await userController.registerUser(req.body);
+                   res.status(200).json({ message: result });
+                   } catch (error) {
+                   next(error);
+                   }
+               }
+               );
+
+    => In above example, we have used the instance created above to accept the multipart/form-data as upload.single("<fiedname as in the postman>")=> upload.single("profilePic");
+
+    => after that we need to store the file name along with the path where file is saved using above code by attaching the profilePic filed in req.body json as follows:
+
+    req.file store following information about the file :
+
+                {
+            fieldname: 'profilePic',
+            originalname: '077396AD-1148-4816-A65A-2EF7189A1665.jpeg',
+            encoding: '7bit',
+            mimetype: 'image/jpeg',
+            destination: './public/images',
+            filename: '1708524528116-077396AD-1148-4816-A65A-2EF7189A1665.jpeg',
+            path: 'public/images/1708524528116-077396AD-1148-4816-A65A-2EF7189A1665.jpeg',
+            size: 4187914
+            }
+
+    Now, if req.file is there then we can extract the path porperties of req.file object and set the value to profilePic which is set as the field name in database collection where image information is going to be stored:
+
+    if(req.file)
+    {
+    const {path} = req.file;
+    req.body.profilePic = path.replace("public","");
+    }
+
+    req.body BEFORE ADDING profilePic field and its value :
+
+            {
+        name: 'Suraj Pandey',
+        email: 'surajpandey77@gmail.com',
+        password: 'suraj1230',
+        phoneNumber: '98957837483'
+        }
+
+    req.body AFTER ADDING profilePic and its value :
+
+            {
+        name: 'Suraj Pandey',
+        email: 'surajpandey77@gmail.com',
+        password: 'suraj1230',
+        phoneNumber: '98957837483',
+        profilePic: '/images/1708528868598-077396AD-1148-4816-A65A-2EF7189A1665.jpeg'
+        }
+
+Now, this data is going to be stored into the database.
