@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema(
       required: [true, "password is required"],
       select: false, //exclude password
     },
+    profilePic: { type: String },
     phoneNumber: {
       type: Number,
       required: [true, "Please provide contact details"],

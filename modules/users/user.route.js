@@ -7,17 +7,29 @@ const {
   loginValidate,
   changePasswordValidation,
 } = require("./user.validate");
-const nodemailer = require("nodemailer");
 const { checkRole } = require("../../utils/sessionManager");
+const multer = require("multer");
 
-// this is only accessible by admin only
-router.get("/", checkRole(["user"]), async (req, res, next) => {
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/images"); //make sure the new folders are in the public folder
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + "." + file.originalname.split(".")[1]
+    );
+    // console.log(file.originalname.split("."));
+  },
+});
+
+const upload = multer({ storage: storage });
+
+router.get("/", checkRole(["admin"]), async (req, res, next) => {
   try {
     const { limit, page, name, role } = req.query;
-    // console.log(req.query);
     const search = { name, role };
     console.log(search);
-
     const result = await userController.getAllUsers(search, page, limit);
     res.json({ message: result });
   } catch (error) {
@@ -49,14 +61,24 @@ router.delete("/:id", async (req, res) => {
 //   res.json({ message: `We are inside patch method of user` });
 // });
 
-router.post("/register", validate, async (req, res, next) => {
-  try {
-    const result = await userController.registerUser(req.body);
-    res.status(200).json({ message: result });
-  } catch (error) {
-    next(error);
+router.post(
+  "/register",
+  upload.single("profilePic"),
+  validate,
+  async (req, res, next) => {
+    console.log(req.file);
+    try {
+      if (req.file) {
+        const { path } = req.file;
+        req.body.profilePic = path.replace("public", "");
+      }
+      const result = await userController.registerUser(req.body);
+      res.status(200).json({ message: result });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.post("/login", loginValidate, async (req, res, next) => {
   try {
