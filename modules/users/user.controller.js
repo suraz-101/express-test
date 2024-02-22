@@ -74,9 +74,10 @@ const getAllUsers = async (search, page = 1, limit = 2) => {
   );
 
   const result = await userModel.aggregate(querry);
+  // if(!result[0].total[0]) throw new Error("user not found")
   return {
     data: result[0].data,
-    total: result[0].total || 0,
+    total: result[0].total,
     page: +page,
     limit: +limit,
   };
