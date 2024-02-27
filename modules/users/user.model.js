@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema(
       required: [true, "password is required"],
       select: false, //exclude password
     },
+    gender: { type: String, required: [true, "Gender is mandatory"] },
     profilePic: { type: String },
     phoneNumber: {
       type: Number,

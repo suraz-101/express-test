@@ -9,6 +9,7 @@ const Schema = Joi.object({
   phoneNumber: Joi.number().required(),
   password: Joi.string().required().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
   role: Joi.array().items(Joi.string().valid("user", "admin")),
+  gender: Joi.string().required(),
   profilePic: Joi.string(),
 });
 
