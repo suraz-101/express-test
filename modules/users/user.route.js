@@ -26,7 +26,6 @@ router.get("/", checkRole(["user"]), async (req, res, next) => {
   try {
     const { limit, page, name, role } = req.query;
     const search = { name, role };
-    console.log(search);
     const result = await userController.getAllUsers(search, page, limit);
     res.json({ message: result });
   } catch (error) {
@@ -63,6 +62,7 @@ router.post(
   upload.single("profilePic"),
   validate,
   async (req, res, next) => {
+    console.log(req);
     console.log(req.file);
     console.log(req.body);
     try {
@@ -157,6 +157,7 @@ router.put(
   checkRole(["user"]),
   async (req, res, next) => {
     try {
+      console.log(req);
       const { id, ...rest } = req.body;
       if (!id) throw new Error("Id is required");
       const result = await userController.updateProfile(id, rest);
