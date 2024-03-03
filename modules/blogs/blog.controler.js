@@ -13,14 +13,6 @@ const commonQuerry = [
     },
   },
   {
-    $lookup: {
-      from: "comments",
-      localField: "_id",
-      foreignField: "postedTo",
-      as: "BlogComments",
-    },
-  },
-  {
     $unwind: {
       path: "$BlogAuthor",
       preserveNullAndEmptyArrays: true,
@@ -29,7 +21,6 @@ const commonQuerry = [
   {
     $addFields: {
       author: "$BlogAuthor.name",
-      numberOfComments: { $size: "$BlogComments" },
     },
   },
 ];
@@ -86,8 +77,6 @@ const getPublishedBlogs = async (search, page = 1, limit = 3) => {
       author: 1,
       slug: 1,
       status: 1,
-      comments: "$BlogComments.comment",
-      numberOfComments: 1,
     },
   });
 
