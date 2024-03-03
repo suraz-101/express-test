@@ -140,10 +140,10 @@ const loginUser = async (payload) => {
 const generateOTP = async (payload) => {
   const { email } = payload;
   if (!email) throw new Error("please enter email");
-  // const user = await userModel.findOne({ email });
+  const user = await userModel.findOne({ email });
   if (!user) throw new Error("user does not exists");
   const otp = await otpCode();
-  // await userModel.updateOne({ email }, { otp });
+  await userModel.updateOne({ email }, { otp });
   mailler(email, "  OTP", `Your otp code is : ${otp}`);
   return "Email is sent ";
 };
