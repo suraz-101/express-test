@@ -6,7 +6,7 @@ const Schema = Joi.object({
     minDomainSegments: 2,
     tlds: { allow: ["com", "net"] },
   }),
-  phoneNumber: Joi.number().required(),
+  phoneNumber: Joi.string().required(),
   password: Joi.string().required().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
   role: Joi.array().items(Joi.string().valid("user", "admin")),
   gender: Joi.string().required(),
