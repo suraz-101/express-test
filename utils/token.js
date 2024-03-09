@@ -1,6 +1,6 @@
 // require("dotenv").config();
 const JWT = require("jsonwebtoken");
-const crypt = require("crypto");
+const crypto = require("crypto");
 
 const signJWT = (payload) => {
   return JWT.sign(

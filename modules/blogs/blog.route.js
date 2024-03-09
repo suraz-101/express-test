@@ -72,12 +72,12 @@ router.get("/slug/:slug", async (req, res, next) => {
 
 router.post(
   "/",
-  uploadBlogImage.single("blogImg"),
+  uploadBlogImage.single("blogImage"),
   checkRole(["user"]),
   validate,
   async (req, res, next) => {
     try {
-      uploadBlogImage.single("blogImage");
+      // uploadBlogImage.single("blogImage");
       console.log(req.body);
       console.log(req.files);
       req.body.blogImage = req.file.path.replace("public", "");
