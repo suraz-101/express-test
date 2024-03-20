@@ -78,10 +78,7 @@ router.post(
   async (req, res, next) => {
     try {
       // uploadBlogImage.single("blogImage");
-      console.log(req.body);
-      console.log(req.files);
       req.body.blogImage = req.file.path.replace("public", "");
-      console.log(req.body);
       const result = await blogController.create(req.body);
       res.json({ data: result });
     } catch (err) {
