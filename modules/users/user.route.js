@@ -123,6 +123,7 @@ router.patch(
 router.get("/get-user", checkRole(["user"]), async (req, res, next) => {
   try {
     const { id } = req.body;
+    
     if (!id) throw new Error("id is required");
     const result = await userController.getProfile(id);
     res.status(200).json({ message: result });

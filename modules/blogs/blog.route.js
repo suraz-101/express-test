@@ -104,6 +104,7 @@ router.put("/updateBlog", checkRole(["admin"]), async (req, res, next) => {
 router.patch("/status/:id", checkRole(["user"]), async (req, res, next) => {
   try {
     const { id } = req.params;
+
     const result = await blogController.updateTheStatusOnly(id);
     res.json({ message: result });
   } catch (err) {
@@ -111,18 +112,14 @@ router.patch("/status/:id", checkRole(["user"]), async (req, res, next) => {
   }
 });
 
-router.delete(
-  "/deleteBlog/:id",
-  checkRole(["user"]),
-  async (req, res, next) => {
-    try {
-      const { id } = req.body;
-      const result = await blogController.deleteById(id);
-      res.json({ message: result });
-    } catch (error) {
-      next();
-    }
+router.delete("/deleteBlog", checkRole(["user"]), async (req, res, next) => {
+  try {
+    const { id } = req.body;
+    const result = await blogController.deleteById(id);
+    res.json({ message: result });
+  } catch (error) {
+    next();
   }
-);
+});
 
 module.exports = router;
